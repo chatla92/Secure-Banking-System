@@ -1,4 +1,5 @@
 package manager;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import orm.*;
@@ -19,9 +20,30 @@ public class App {
 	        session.getTransaction().commit();
 	        
 	        InternalUser person = (InternalUser) session.get(InternalUser.class, personId);        
-	        System.out.println(person.getEmail());
-	                
+	        InternalUser person1=getPersonById(123);
+	        System.out.println(person1.getEmail());
+	        System.out.println(person1.getPhone_no());
+	        System.out.println(person1.getPriv());
+	        System.out.println(person1.getSalary());
 	        session.close();
 	    }
+	  static InternalUser getPersonById(int id)
+	  {
+		  Session session = null;
+	        InternalUser user = null;
+	        try {
+	            session = HibernateUtil.getSessionFactory().openSession();
+	            user =  session.load(InternalUser.class,
+	                    id);
+	            Hibernate.initialize(user);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	        return user;
+	  }
 
 }
