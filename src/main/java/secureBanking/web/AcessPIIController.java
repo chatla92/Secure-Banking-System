@@ -1,21 +1,20 @@
-package web;
+package secureBanking.web;
 
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class DeleteController {
+@RestController
+public class AcessPIIController {
+
     private static final Logger logger = Logger.getLogger(HomeController.class);
-    @RequestMapping("/delete")
-    
+
+    @RequestMapping("/pii")
     public String welcome(Model model) {
-        if(logger.isDebugEnabled()){
-            logger.debug("Home Page requested!");
-        }
+        logger.debug("Home Page requested!");
         model.addAttribute("greeting", "gretting!!!");
-        model.addAttribute("tagline", "Delete Controller");
+        model.addAttribute("tagline", "PII Controller");
         
         return "welcome";
     }
