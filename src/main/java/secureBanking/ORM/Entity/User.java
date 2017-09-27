@@ -1,4 +1,4 @@
-package secureBanking.orm;
+package secureBanking.ORM.Entity;
 
 import lombok.Data;
 

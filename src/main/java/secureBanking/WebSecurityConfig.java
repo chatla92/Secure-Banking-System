@@ -24,7 +24,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${app.auth.logout.endpoint}") public String LOGOUT_END_POINT;
     @Value("${app.auth.form.endpoint}") public String AUTH_FORM;
     @Value("${app.welcome.endpoint}") public String WELCOME_END_POINT;
-
     private LoginAuthenticationProvider loginAuthenticationProvider;
 
     @Autowired
@@ -32,8 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.loginAuthenticationProvider = loginAuthenticationProvider;
     }
 
-    private LoginProcessingFilter buildLoginProcessingFilter()
-    {
+    private LoginProcessingFilter buildLoginProcessingFilter() {
         return new LoginProcessingFilter(AUTH_END_POINT);
     }
 
@@ -75,6 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(AUTH_END_POINT).permitAll()
                 .antMatchers(WELCOME_END_POINT).permitAll()
 
+
+
                 .and()
                 .authorizeRequests()
                 .antMatchers("/log").hasRole("ADMIN")
@@ -82,6 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").authenticated()
+
+                .and()
+                .authorizeRequests()
+                .antMatchers("/createUsers").permitAll()
 
                 .and()
                 .addFilterBefore(buildLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);

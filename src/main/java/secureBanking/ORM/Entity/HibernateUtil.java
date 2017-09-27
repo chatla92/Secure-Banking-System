@@ -1,4 +1,4 @@
-package secureBanking.orm;
+package secureBanking.ORM.Entity;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -9,6 +9,7 @@ public class HibernateUtil {
 	  
 	    private static SessionFactory buildSessionFactory() {
 	        try {
+	        	System.out.println("startedsession");
 	            return new Configuration().configure().buildSessionFactory();
 	        } catch (Throwable ex) {
 	            System.err.println("Initial SessionFactory creation failed." + ex);
@@ -22,7 +23,8 @@ public class HibernateUtil {
 	  
 	    public static void shutdown() {
 	        // Close caches and connection pools
-	        getSessionFactory().close();
+			System.out.println("stopsession");
+			getSessionFactory().close();
 	    }
 }
 
