@@ -33,6 +33,7 @@ public class WelcomeController {
             for (InternalUser q : internalUserImpl.findByEmail("pragna@asu.edu")) {
                 System.out.println("helloworld"+q.toString());
             }
+            System.out.println(internalUserImpl.getallEmployee_id());
             model.put("message","User created");
         }
         catch(Exception e) {
