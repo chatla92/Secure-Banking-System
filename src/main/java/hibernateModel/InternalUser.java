@@ -13,6 +13,31 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "internal_users")
 public class InternalUser {
+
+	public InternalUser() {
+
+	}
+
+	public InternalUser(int emp_id, String name, String ssn, String email, String address, String zipcode,
+			String gender, String user_name, String password, String contact_no, String priv, long salary,
+			long threshold, List<InternalAuthorization> internalAuth, List<Transaction> transactions) {
+		this.emp_id = emp_id;
+		this.name = name;
+		this.ssn = ssn;
+		this.email = email;
+		this.address = address;
+		this.zipcode = zipcode;
+		this.gender = gender;
+		this.user_name = user_name;
+		this.password = password;
+		this.contact_no = contact_no;
+		this.priv = priv;
+		this.salary = salary;
+		this.threshold = threshold;
+		this.internalAuth = internalAuth;
+		this.transactions = transactions;
+	}
+
 	@Id
 	@Column(name = "emp_id", nullable = false)
 	private int emp_id;

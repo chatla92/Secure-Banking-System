@@ -16,6 +16,25 @@ import javax.persistence.Table;
 @Table(name = "transactions")
 public class Transaction {
 
+	public Transaction() {
+
+	}
+
+	public Transaction(int trans_id, long amount, String type, String from_acc, String to_acc, boolean isActive,
+			InternalUser internalUser, int init_id, List<InternalAuthorization> internalAuth,
+			List<ExternalAuthorization> externalAuth) {
+		this.trans_id = trans_id;
+		this.amount = amount;
+		this.type = type;
+		this.from_acc = from_acc;
+		this.to_acc = to_acc;
+		this.isActive = isActive;
+		this.internalUser = internalUser;
+		this.init_id = init_id;
+		this.internalAuth = internalAuth;
+		this.externalAuth = externalAuth;
+	}
+
 	@Id
 	@Column(name = "trans_id", nullable = false)
 	private int trans_id;

@@ -16,6 +16,18 @@ import javax.persistence.Table;
 @Table(name = "Accounts")
 public class Accounts {
 
+	public Accounts() {
+
+	}
+
+	public Accounts(String acc_id, String type, long balance, ExternalUser extUser, List<Cards> cards) {
+		this.acc_id = acc_id;
+		this.type = type;
+		this.balance = balance;
+		this.extUser = extUser;
+		this.cards = cards;
+	}
+
 	@Id
 	@Column(name = "acc_id", nullable = false)
 	private String acc_id;

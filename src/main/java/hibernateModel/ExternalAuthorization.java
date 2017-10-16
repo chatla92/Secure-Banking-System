@@ -1,7 +1,5 @@
 package hibernateModel;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +13,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Pending_Auth_Ext")
 public class ExternalAuthorization {
+
+	public ExternalAuthorization() {
+
+	}
+
+	public ExternalAuthorization(int id, Transaction transactions, Accounts account, boolean isAuth) {
+		this.id = id;
+		this.transactions = transactions;
+		this.account = account;
+		this.isAuth = isAuth;
+	}
+
 	@Id
 	@Column(name = "id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)

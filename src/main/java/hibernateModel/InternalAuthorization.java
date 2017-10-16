@@ -1,7 +1,5 @@
 package hibernateModel;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +13,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Pending_Auth")
 public class InternalAuthorization {
+
+	public InternalAuthorization() {
+
+	}
+
+	public InternalAuthorization(int id, Transaction transaction, InternalUser intUser, boolean auth_state) {
+		this.id = id;
+		this.transaction = transaction;
+		this.intUser = intUser;
+		this.auth_state = auth_state;
+	}
 
 	@Id
 	@Column(name = "id", nullable = false)

@@ -14,6 +14,28 @@ import javax.persistence.Table;
 @Table(name = "external_users")
 public class ExternalUser {
 
+	public ExternalUser() {
+
+	}
+
+	public ExternalUser(int user_id, String name, String ssn, String email, String address, String zipcode,
+			String gender, String user_name, String contact_no, String password, String role, long threshold,
+			List<Accounts> accounts) {
+		this.user_id = user_id;
+		this.name = name;
+		this.ssn = ssn;
+		this.email = email;
+		this.address = address;
+		this.zipcode = zipcode;
+		this.gender = gender;
+		this.user_name = user_name;
+		this.contact_no = contact_no;
+		this.password = password;
+		this.role = role;
+		this.threshold = threshold;
+		this.accounts = accounts;
+	}
+
 	@Id
 	@Column(name = "user_id", nullable = false)
 	private int user_id;

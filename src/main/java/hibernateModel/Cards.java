@@ -1,7 +1,5 @@
 package hibernateModel;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +11,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Cards")
 public class Cards {
+
+	public Cards() {
+
+	}
+
+	public Cards(String card_no, String type, Accounts accounts, int cvv, boolean isActive) {
+		this.card_no = card_no;
+		this.type = type;
+		this.accounts = accounts;
+		this.cvv = cvv;
+		this.isActive = isActive;
+	}
+
 	@Id
 	@Column(name = "card_no", nullable = false)
 	private String card_no;
