@@ -1,14 +1,16 @@
 package hibernateModel;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "external_users")
@@ -18,10 +20,8 @@ public class ExternalUser {
 
 	}
 
-	public ExternalUser(int user_id, String name, String ssn, String email, String address, String zipcode,
-			String gender, String user_name, String contact_no, String password, String role, long threshold,
-			List<Accounts> accounts) {
-		this.user_id = user_id;
+	public ExternalUser(String name, String ssn, String email, String address, String zipcode, String gender,
+			String user_name, String contact_no, String password, String role, int attempt, long threshold) {
 		this.name = name;
 		this.ssn = ssn;
 		this.email = email;
@@ -32,8 +32,8 @@ public class ExternalUser {
 		this.contact_no = contact_no;
 		this.password = password;
 		this.role = role;
+		this.attempt = attempt;
 		this.threshold = threshold;
-		this.accounts = accounts;
 	}
 
 	@Id
@@ -58,7 +58,7 @@ public class ExternalUser {
 	@Column(name = "gender", nullable = false)
 	private String gender;
 
-	@Column(name = "user_name", nullable = false)
+	@Column(name = "user_name", unique = true, nullable = false)
 	private String user_name;
 
 	@Column(name = "contact_no", nullable = false)
@@ -67,20 +67,24 @@ public class ExternalUser {
 	@Column(name = "password", nullable = false)
 	private String password;
 
+	@Column(name = "attempt", columnDefinition = "int default 3", nullable = false)
+	private int attempt;
+
 	@Column(name = "role", nullable = false)
 	private String role;
 
 	@Column(name = "threshold", nullable = false)
 	private long threshold;
 
-	@OneToMany(mappedBy = "extUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Accounts> accounts;
+	@OneToMany(mappedBy = "extUser", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<Accounts> accounts;
 
-	public List<Accounts> getAccounts() {
+	public Set<Accounts> getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(List<Accounts> accounts) {
+	public void setAccounts(Set<Accounts> accounts) {
 		this.accounts = accounts;
 	}
 
@@ -90,6 +94,14 @@ public class ExternalUser {
 
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
+	}
+
+	public int getAttempt() {
+		return attempt;
+	}
+
+	public void setAttempt(int attempt) {
+		this.attempt = attempt;
 	}
 
 	public String getName() {

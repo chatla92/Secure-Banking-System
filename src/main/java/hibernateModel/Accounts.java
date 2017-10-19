@@ -1,6 +1,6 @@
 package hibernateModel;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 @Table(name = "Accounts")
 public class Accounts {
@@ -20,7 +23,7 @@ public class Accounts {
 
 	}
 
-	public Accounts(String acc_id, String type, long balance, ExternalUser extUser, List<Cards> cards) {
+	public Accounts(String acc_id, String type, long balance, ExternalUser extUser, Set<Cards> cards) {
 		this.acc_id = acc_id;
 		this.type = type;
 		this.balance = balance;
@@ -42,14 +45,15 @@ public class Accounts {
 	@JoinColumn(name = "user_id", nullable = false)
 	private ExternalUser extUser;
 
-	@OneToMany(mappedBy = "accounts", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Cards> cards;
+	@OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<Cards> cards;
 
-	public List<Cards> getCards() {
+	public Set<Cards> getCards() {
 		return cards;
 	}
 
-	public void setCards(List<Cards> cards) {
+	public void setCards(Set<Cards> cards) {
 		this.cards = cards;
 	}
 

@@ -34,7 +34,7 @@ public class InternalAuthorization {
 	@JoinColumn(name = "trans_id", nullable = false)
 	private Transaction transaction;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne()
 	@JoinColumn(name = "emp_id", nullable = false)
 	private InternalUser intUser;
 

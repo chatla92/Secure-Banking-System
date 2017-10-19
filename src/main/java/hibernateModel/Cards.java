@@ -31,7 +31,7 @@ public class Cards {
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "acc_id", nullable = false)
 	private Accounts accounts;
 

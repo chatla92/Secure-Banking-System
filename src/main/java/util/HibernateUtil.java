@@ -1,24 +1,22 @@
 package util;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
 
 	private static SessionFactory sSessionFactory;
-	private static ServiceRegistry serviceRegistry;
 
 	private static final Object mLock = new Object();
 
 	public static SessionFactory createSessionFactory() {
-		Configuration configuration = new Configuration();
-		configuration.configure(HibernateUtil.class.getClassLoader()
-				.getResource("hibernate.cfg.xml"));
-		serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
-				configuration.getProperties()).build();
-		return configuration.buildSessionFactory(serviceRegistry);
+		StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
+				.configure(HibernateUtil.class.getClassLoader().getResource("hibernate.cfg.xml")).build();
+		Metadata metaData = new MetadataSources(standardRegistry).getMetadataBuilder().build();
+		return metaData.getSessionFactoryBuilder().build();
 	}
 
 	public static SessionFactory getSessionFactory() {
