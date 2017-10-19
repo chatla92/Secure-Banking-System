@@ -1,6 +1,6 @@
 package hibernateModel;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "internal_users")
@@ -19,8 +22,8 @@ public class InternalUser {
 	}
 
 	public InternalUser(int emp_id, String name, String ssn, String email, String address, String zipcode,
-			String gender, String user_name, String password, String contact_no, String priv, long salary,
-			long threshold, List<InternalAuthorization> internalAuth, List<Transaction> transactions) {
+			String gender, String user_name, String password, String role, String contact_no, String priv, long salary,
+			long threshold, Set<InternalAuthorization> internalAuth, Set<Transaction> transactions) {
 		this.emp_id = emp_id;
 		this.name = name;
 		this.ssn = ssn;
@@ -31,7 +34,7 @@ public class InternalUser {
 		this.user_name = user_name;
 		this.password = password;
 		this.contact_no = contact_no;
-		this.priv = priv;
+		this.role = role;
 		this.salary = salary;
 		this.threshold = threshold;
 		this.internalAuth = internalAuth;
@@ -53,24 +56,27 @@ public class InternalUser {
 	private String zipcode;
 	@Column(name = "gender", nullable = false)
 	private String gender;
-	@Column(name = "user_name", nullable = false)
+	@Column(name = "user_name", unique = true, nullable = false)
 	private String user_name;
 	@Column(name = "password", nullable = false)
 	private String password;
+	@Column(name = "role", nullable = false)
+	private String role;
+
 	@Column(name = "contact_no", nullable = false)
 	private String contact_no;
-	@Column(name = "priv", nullable = false)
-	private String priv;
 	@Column(name = "salary", nullable = false)
 	private long salary;
 	@Column(name = "threshold", nullable = false)
 	private long threshold;
 
-	@OneToMany(mappedBy = "intUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<InternalAuthorization> internalAuth;
+	@OneToMany(mappedBy = "intUser", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<InternalAuthorization> internalAuth;
 
-	@OneToMany(mappedBy = "internalUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Transaction> transactions;
+	@OneToMany(mappedBy = "internalUser", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<Transaction> transactions;
 
 	public int getEmp_id() {
 		return emp_id;
@@ -82,6 +88,14 @@ public class InternalUser {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public void setName(String name) {
@@ -152,14 +166,6 @@ public class InternalUser {
 		this.contact_no = contact_no;
 	}
 
-	public String getPriv() {
-		return priv;
-	}
-
-	public void setPriv(String priv) {
-		this.priv = priv;
-	}
-
 	public long getSalary() {
 		return salary;
 	}
@@ -176,19 +182,19 @@ public class InternalUser {
 		this.threshold = threshold;
 	}
 
-	public List<InternalAuthorization> getInternalAuth() {
+	public Set<InternalAuthorization> getInternalAuth() {
 		return internalAuth;
 	}
 
-	public void setInternalAuth(List<InternalAuthorization> internalAuth) {
+	public void setInternalAuth(Set<InternalAuthorization> internalAuth) {
 		this.internalAuth = internalAuth;
 	}
 
-	public List<Transaction> getTransactions() {
+	public Set<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	public void setTransactions(List<Transaction> transactions) {
+	public void setTransactions(Set<Transaction> transactions) {
 		this.transactions = transactions;
 	}
 

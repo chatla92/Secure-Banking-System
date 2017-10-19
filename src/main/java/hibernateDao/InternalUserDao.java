@@ -8,4 +8,5 @@ public class InternalUserDao extends AbstractDao<InternalUser> {
 		super(InternalUser.class);
 		// TODO Auto-generated constructor stub
 	}
+
 }

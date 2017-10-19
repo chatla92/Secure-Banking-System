@@ -1,6 +1,7 @@
 package hibernateModel;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 @Table(name = "transactions")
 public class Transaction {
@@ -21,8 +25,8 @@ public class Transaction {
 	}
 
 	public Transaction(int trans_id, long amount, String type, String from_acc, String to_acc, boolean isActive,
-			InternalUser internalUser, int init_id, List<InternalAuthorization> internalAuth,
-			List<ExternalAuthorization> externalAuth) {
+			InternalUser internalUser, int init_id, Set<InternalAuthorization> internalAuth,
+			Set<ExternalAuthorization> externalAuth) {
 		this.trans_id = trans_id;
 		this.amount = amount;
 		this.type = type;
@@ -61,11 +65,13 @@ public class Transaction {
 	@Column(name = "init_id", nullable = false)
 	private int init_id;
 
-	@OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<InternalAuthorization> internalAuth;
+	@OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<InternalAuthorization> internalAuth;
 
-	@OneToMany(mappedBy = "transactions", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<ExternalAuthorization> externalAuth;
+	@OneToMany(mappedBy = "transactions", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<ExternalAuthorization> externalAuth;
 
 	public InternalUser getInternalUser() {
 		return internalUser;
@@ -75,19 +81,19 @@ public class Transaction {
 		this.internalUser = internalUser;
 	}
 
-	public List<InternalAuthorization> getInternalAuth() {
+	public Set<InternalAuthorization> getInternalAuth() {
 		return internalAuth;
 	}
 
-	public void setInternalAuth(List<InternalAuthorization> internalAuth) {
+	public void setInternalAuth(Set<InternalAuthorization> internalAuth) {
 		this.internalAuth = internalAuth;
 	}
 
-	public List<ExternalAuthorization> getExternalAuth() {
+	public Set<ExternalAuthorization> getExternalAuth() {
 		return externalAuth;
 	}
 
-	public void setExternalAuth(List<ExternalAuthorization> externalAuth) {
+	public void setExternalAuth(Set<ExternalAuthorization> externalAuth) {
 		this.externalAuth = externalAuth;
 	}
 
