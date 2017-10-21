@@ -8,7 +8,6 @@
         <tr>
             <th>Date</th>
             <th>Receiver</th>
-            <th>Sender</th>
             <th>Type</th>
             <th>Amount</th>
         </tr>
