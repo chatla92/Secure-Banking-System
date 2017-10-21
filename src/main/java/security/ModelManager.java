@@ -7,23 +7,10 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
 
+import hibernateDao.*;
+import hibernateModel.*;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
-
-import hibernateDao.AccountsDao;
-import hibernateDao.CreditCardsDao;
-import hibernateDao.DebitCardsDao;
-import hibernateDao.ExternalUserDao;
-import hibernateDao.InternalAuthorizationDao;
-import hibernateDao.InternalUserDao;
-import hibernateDao.TransactionDao;
-import hibernateModel.Accounts;
-import hibernateModel.CreditCards;
-import hibernateModel.DebitCards;
-import hibernateModel.ExternalUser;
-import hibernateModel.InternalAuthorization;
-import hibernateModel.InternalUser;
-import hibernateModel.Transaction;
 
 public class ModelManager {
 	private static final Logger logger = Logger.getLogger(ModelManager.class);
@@ -166,6 +153,78 @@ public class ModelManager {
 		return isSuccessful;
 	}
 
+	public static boolean sendExtReq(String email, float amount, String type, String number){
+
+		AccountsDao accountsDao = new AccountsDao();
+		Accounts accounts = accountsDao.get(number, "acc_id");
+		ExternalUserDao extDao = new ExternalUserDao();
+		ExternalUser extUser = extDao.get(email, "email");
+		boolean isSuccessful = false;
+		try {
+			if (type.equals("Debit")) {
+				isSuccessful = handleDebitCardReq(extUser, number, amount);
+			} else if (type.equals("Credit")) {
+				int k = 0;
+			} else {
+				isSuccessful = handleAccountReq(extUser, number, amount);
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+		return isSuccessful;
+	}
+
+	private static boolean handleAccountReq(ExternalUser extUser, String number, float amount) {
+
+		AccountsDao accDao = new AccountsDao();
+		Accounts acc = accDao.get(number, "acc_id");
+		boolean isSuccessful = false;
+		if (amount > acc.getExtUser().getThreshold()) {
+			Transaction transaction = createTransEntry(amount, "DEB", extUser.getAccounts().iterator().next().getAcc_id(),
+					number, true, false, Integer.valueOf(acc.getAcc_id()));
+			Accounts accq = accDao.get(extUser.getAccounts().iterator().next().getAcc_id(), "acc_id");
+			createExtAuthEntry(transaction, accq);
+			isSuccessful = true;
+		}
+		else{
+			Transaction transaction = createTransEntry(amount, "DEB", extUser.getAccounts().iterator().next().getAcc_id(),
+					number, false, false, Integer.valueOf(acc.getAcc_id()));
+			Accounts accq = accDao.get(extUser.getAccounts().iterator().next().getAcc_id(), "acc_id");
+			createExtAuthEntry(transaction, accq);
+			isSuccessful = true;
+		}
+		return isSuccessful;
+	}
+
+
+	private static boolean handleDebitCardReq(ExternalUser extUser, String number, float amount) {
+		DebitCardsDao dao = new DebitCardsDao();
+		DebitCards cards = dao.get(number, "card_no");
+		boolean isSuccessful = false;
+		if (amount > cards.getAccounts().getExtUser().getThreshold()) {
+			Transaction transaction = createTransEntry(amount, "DEB", extUser.getAccounts().iterator().next().getAcc_id(),
+					number, true, false,
+					Integer.valueOf(cards.getAccounts().getAcc_id()));
+			AccountsDao accDao = new AccountsDao();
+			Accounts accq = accDao.get(extUser.getAccounts().iterator().next().getAcc_id(), "acc_id");
+			createExtAuthEntry(transaction, accq);
+			isSuccessful = true;
+		}
+		else{
+				Transaction transaction = createTransEntry(amount, "DEB", extUser.getAccounts().iterator().next().getAcc_id(),
+						number, false, false,
+						Integer.valueOf(cards.getAccounts().getAcc_id()));
+				AccountsDao accDao = new AccountsDao();
+				Accounts accq = accDao.get(extUser.getAccounts().iterator().next().getAcc_id(), "acc_id");
+				createExtAuthEntry(transaction, accq);
+				isSuccessful = true;
+		}
+		return isSuccessful;
+	}
+
+
+
 	private static boolean handleAccountTrans(ExternalUser extUser, String number, float amount) {
 
 		AccountsDao accDao = new AccountsDao();
@@ -256,6 +315,12 @@ public class ModelManager {
 		Transaction transaction = new Transaction(amount, type, fromAcc, toAcc, isCritical, status, initiatedBy);
 		transDao.create(transaction);
 		return transaction;
+	}
+
+	private static void createExtAuthEntry(Transaction transaction, Accounts account){
+		ExternalAuthorizationDao authDoa = new ExternalAuthorizationDao();
+		ExternalAuthorization externalAuthorization = new ExternalAuthorization(transaction , account, false);
+		authDoa.create(externalAuthorization);
 	}
 
 }
