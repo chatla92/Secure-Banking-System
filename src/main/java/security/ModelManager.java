@@ -154,97 +154,108 @@ public class ModelManager {
 			ExternalUserDao extDao = new ExternalUserDao();
 			ExternalUser extUser = extDao.get(email, "email");
 			if (type.equals("Debit")) {
-				DebitCardsDao dao = new DebitCardsDao();
-				DebitCards cards = dao.get(number, "card_no");
-				if (amount > cards.getAccounts().getExtUser().getThreshold()) {
-					// put it in pending of internal
-					TransactionDao transDao = new TransactionDao();
-					Transaction transaction = new Transaction(amount, "DEB", number,
-							extUser.getAccounts().iterator().next().getAcc_id(), true, false,
-							Integer.valueOf(cards.getAccounts().getAcc_id()));
-					transDao.create(transaction);
-					InternalAuthorizationDao authDao = new InternalAuthorizationDao();
-					InternalAuthorization internalAuth = new InternalAuthorization(transaction, "Tier2", false);
-					authDao.create(internalAuth);
-					isSuccessful = true;
-				} else {
-					AccountsDao accDao = new AccountsDao();
-					Accounts acc = accDao.get(cards.getAccounts().getAcc_id(), "acc_id");
-					float temp = acc.getBalance() - amount;
-					if (temp > 0) {
-						TransactionDao transDao = new TransactionDao();
-						Transaction transaction = new Transaction(amount, "DEB", number,
-								extUser.getAccounts().iterator().next().getAcc_id(), false, true,
-								Integer.valueOf(cards.getAccounts().getAcc_id()));
-						transDao.create(transaction);
-						
-						Accounts rec_acc = extUser.getAccounts().iterator().next();
-						rec_acc.setBalance(rec_acc.getBalance()+amount);
-						accDao.update(rec_acc);
-						
-						acc.setBalance(temp);
-						accDao.update(acc);
-						isSuccessful = true;
-					} else {
-						isSuccessful = false;
-					}
-				}
+				isSuccessful = handleDebitCardTrans(extUser, number, amount);
 			} else if (type.equals("Credit")) {
-				AccountsDao accDao = new AccountsDao();
-				CreditCardsDao dao = new CreditCardsDao();
-				CreditCards cards = dao.get(number, "card_no");
-				if (cards.getOutstandingamount() + amount <= cards.getMaxlimit()) {
-					TransactionDao transDao = new TransactionDao();
-					Transaction transaction = new Transaction(amount, "DEB", number,
-							extUser.getAccounts().iterator().next().getAcc_id(), true, false,
-							Integer.valueOf(cards.getAccId().getAcc_id()));
-					transDao.create(transaction);
-					cards.setOutstandingamount(cards.getOutstandingamount() + amount);
-					Accounts rec_acc = extUser.getAccounts().iterator().next();
-					rec_acc.setBalance(rec_acc.getBalance()+amount);
-					accDao.update(rec_acc);
-					dao.update(cards);
-					isSuccessful = true;
-				}
+				isSuccessful = handleCreditCardTrans(extUser, number, amount);
 			} else {
-				AccountsDao accDao = new AccountsDao();
-				Accounts acc = accDao.get(number, "acc_id");
-				if (amount > acc.getExtUser().getThreshold()) {
-					// put it in pending of internal
-					TransactionDao transDao = new TransactionDao();
-					Transaction transaction = new Transaction(amount, "DEB", number,
-							extUser.getAccounts().iterator().next().getAcc_id(), true, false,
-							Integer.valueOf(acc.getAcc_id()));
-					transDao.create(transaction);
-					InternalAuthorizationDao authDao = new InternalAuthorizationDao();
-					InternalAuthorization internalAuth = new InternalAuthorization(transaction, "Tier2", false);
-					authDao.create(internalAuth);
-					isSuccessful = true;
-				} else {
-					float temp = acc.getBalance() - amount;
-					if (temp > 0) {
-						TransactionDao transDao = new TransactionDao();
-						Transaction transaction = new Transaction(amount, "DEB", number,
-								extUser.getAccounts().iterator().next().getAcc_id(), false, true,
-								Integer.valueOf(acc.getAcc_id()));
-						transDao.create(transaction);
-						Accounts rec_acc = extUser.getAccounts().iterator().next();
-						rec_acc.setBalance(rec_acc.getBalance()+amount);
-						accDao.update(rec_acc);
-						
-						acc.setBalance(temp);
-						accDao.update(acc);
-						
-						isSuccessful = true;
-					} else {
-						isSuccessful = false;
-					}
-				}
+				isSuccessful = handleAccountTrans(extUser, number, amount);
 			}
 		} catch (Exception e) {
 			return false;
 		}
 		return isSuccessful;
+	}
+
+	private static boolean handleAccountTrans(ExternalUser extUser, String number, float amount) {
+
+		AccountsDao accDao = new AccountsDao();
+		Accounts acc = accDao.get(number, "acc_id");
+		boolean isSuccessful = false;
+		if (amount > acc.getExtUser().getThreshold()) {
+			Transaction transaction = createTransEntry(amount, "DEB", number,
+					extUser.getAccounts().iterator().next().getAcc_id(), true, false, Integer.valueOf(acc.getAcc_id()));
+			createInternalAuthEntry(transaction);
+			isSuccessful = true;
+		} else {
+			float temp = acc.getBalance() - amount;
+			if (temp > 0) {
+				createTransEntry(amount, "DEB", number, extUser.getAccounts().iterator().next().getAcc_id(), false,
+						true, Integer.valueOf(acc.getAcc_id()));
+				updateReceiverAccount(extUser, amount);
+				updateSenderAccount(acc, accDao, temp);
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+		}
+		return isSuccessful;
+	}
+
+	private static boolean handleDebitCardTrans(ExternalUser extUser, String number, float amount) {
+		DebitCardsDao dao = new DebitCardsDao();
+		DebitCards cards = dao.get(number, "card_no");
+		boolean isSuccessful = false;
+		if (amount > cards.getAccounts().getExtUser().getThreshold()) {
+			Transaction transaction = createTransEntry(amount, "DEB", number,
+					extUser.getAccounts().iterator().next().getAcc_id(), true, false,
+					Integer.valueOf(cards.getAccounts().getAcc_id()));
+			createInternalAuthEntry(transaction);
+			isSuccessful = true;
+		} else {
+			AccountsDao accDao = new AccountsDao();
+			Accounts acc = accDao.get(cards.getAccounts().getAcc_id(), "acc_id");
+			float temp = acc.getBalance() - amount;
+			if (temp > 0) {
+				createTransEntry(amount, "DEB", number, extUser.getAccounts().iterator().next().getAcc_id(), false,
+						true, Integer.valueOf(cards.getAccounts().getAcc_id()));
+				updateReceiverAccount(extUser, amount);
+				updateSenderAccount(acc, accDao, temp);
+				isSuccessful = true;
+			} else {
+				isSuccessful = false;
+			}
+		}
+		return isSuccessful;
+	}
+
+	private static boolean handleCreditCardTrans(ExternalUser extUser, String number, float amount) {
+		CreditCardsDao dao = new CreditCardsDao();
+		CreditCards cards = dao.get(number, "card_no");
+		if (cards.getOutstandingamount() + amount <= cards.getMaxlimit()) {
+			createTransEntry(amount, "DEB", number, extUser.getAccounts().iterator().next().getAcc_id(), true, false,
+					Integer.valueOf(cards.getAccId().getAcc_id()));
+			cards.setOutstandingamount(cards.getOutstandingamount() + amount);
+			updateReceiverAccount(extUser, amount);
+			dao.update(cards);
+			return true;
+		}
+		return false;
+	}
+
+	private static void updateSenderAccount(Accounts acc, AccountsDao accDao, float amount) {
+		acc.setBalance(amount);
+		accDao.update(acc);
+	}
+
+	private static void updateReceiverAccount(ExternalUser extUser, float amount) {
+		AccountsDao accDao = new AccountsDao();
+		Accounts rec_acc = extUser.getAccounts().iterator().next();
+		rec_acc.setBalance(rec_acc.getBalance() + amount);
+		accDao.update(rec_acc);
+	}
+
+	private static void createInternalAuthEntry(Transaction transaction) {
+		InternalAuthorizationDao authDao = new InternalAuthorizationDao();
+		InternalAuthorization internalAuth = new InternalAuthorization(transaction, "Tier2", false);
+		authDao.create(internalAuth);
+	}
+
+	private static Transaction createTransEntry(float amount, String type, String fromAcc, String toAcc,
+			boolean isCritical, boolean status, int initiatedBy) {
+		TransactionDao transDao = new TransactionDao();
+		Transaction transaction = new Transaction(amount, type, fromAcc, toAcc, isCritical, status, initiatedBy);
+		transDao.create(transaction);
+		return transaction;
 	}
 
 }
