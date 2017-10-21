@@ -93,6 +93,15 @@ CREATE TABLE IF NOT EXISTS pending_auth_ext (
   FOREIGN KEY (acc_id) REFERENCES accounts (acc_id)
 );
 
+CREATE TABLE IF NOT EXISTS modify_user_info (
+  email varchar(30) DEFAULT NULL,
+  address varchar(400) DEFAULT NULL,
+  zipcode varchar(5) DEFAULT NULL,
+  gender varchar(1) DEFAULT NULL,
+  contact_no varchar(10) DEFAULT NULL,
+  user_name varchar(50) DEFAULT NULL,
+  FOREIGN KEY (user_name) REFERENCES external_users (user_name)
+);
 /* Insert into dummy tuples into database*/
 
 INSERT INTO internal_users VALUES (123,'Tier1 Employee','123456789','Tier1@gmail.com','East Uni','85281','M','943876765','Tier1','a1159e9df3670d549d04524532629f5477ceb7deec9b45e47e8c009506ecb2c8','Tier1','20000','2000');
@@ -106,3 +115,4 @@ INSERT INTO transactions VALUES (120030,'800','ACC','456456','123',false, true,1
 INSERT INTO transactions VALUES (NULL,'800','ACC','456456','123',false, true,0,123456789);
 INSERT INTO pending_auth VALUES (120030,123,1, NULL);
 INSERT INTO pending_auth_ext VALUES (120031,'123456',1, NULL);
+INSERT INTO modify_user_info VALUES ('Dummy_user@gmail.com', 'Changed Uni', '85281', 'F', '9444444444', 'Dummyuser')
