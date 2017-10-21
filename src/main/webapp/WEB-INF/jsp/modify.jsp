@@ -6,7 +6,7 @@
 	<title>Modify</title>
 </head>
 <body>
-	<form action="/modify" method="post">
+	<form action="/securebank/modify" method="post">
 		<label for="username">Username:</label>
 		<input type="text" maxlength="50" name="username" value="${username}">
 
@@ -30,9 +30,17 @@
 		
 		<button type="submit" id="submit" type="submit">Save</button>
 		
-		<button type="reset" value="Reset">Reset</button>
+		<button id="reset" type="reset" value="Reset">Reset</button>
 		
 		<button onclick="location.href = '/securebank/home';" type="button">Cancel</button>
 	</form>
+		<script>
+		$("#reset").click(function(){
+			var fields = window.queryselectorall(input);
+			for(var field = 0; field<fields.length;field++){
+				fields[field].value="";
+			}
+		});
+	</script>
 </body>
 </html>

@@ -27,7 +27,7 @@ public class ExternalAuthorization {
 
 	@Id
 	@Column(name = "id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -49,10 +49,6 @@ public class ExternalAuthorization {
 		this.id = id;
 	}
 
-	public boolean isAuth() {
-		return isAuth;
-	}
-
 	public Transaction getTransactions() {
 		return transactions;
 	}
@@ -67,6 +63,10 @@ public class ExternalAuthorization {
 
 	public void setAccount(Accounts account) {
 		this.account = account;
+	}
+
+	public boolean isAuth() {
+		return isAuth;
 	}
 
 	public void setAuth(boolean isAuth) {

@@ -40,7 +40,7 @@ public class CreateController {
 		if (request.getSession(false) != null) {
 			try {
 				setUserDetails(request);
-				if(RoleCheck.isInternal(role)){
+				if(RoleCheck.isExternal(role)){
 					redAttr.addFlashAttribute("home", "Unauthorized access, Action will be reported");
 					logger.warn(name+ " has tried to access create page");
 					return "redirect:/home";

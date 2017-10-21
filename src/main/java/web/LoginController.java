@@ -1,12 +1,12 @@
 package web;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.hibernate.annotations.DiscriminatorFormula;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import security.DataException;
 import security.ModelManager;
+import security.ValidateCapcha;
 
 @Controller
 public class LoginController {
@@ -53,37 +54,61 @@ public class LoginController {
 	public String loginPost(Model model, HttpServletRequest request, HttpSession session, RedirectAttributes redAttr) {
 		String name = request.getParameter("name");
 		String pwd = request.getParameter("password");
+		String capchaResponse = request.getParameter("g-recaptcha-response");
+		boolean validCapcha = false;
+
+		try {
+			validCapcha = ValidateCapcha.capchaVerify(capchaResponse);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		if (name != "" && request.getParameter("usertype").equals("i")) {
 			try {
 				Map<String, String> result = ModelManager.validateInternalUserById(name, pwd);
 				logger.info("Result from DB is " + result);
-				if (result != null) {
+				if (result != null /*&& validCapcha*/) {
 					// createsession
 					session.setAttribute("role", result.get("role"));
 					session.setAttribute("id", Integer.valueOf(result.get("id")));
 					session.setAttribute("name", result.get("name"));
 					return "redirect:/home";
-				} else {
-					logger.info("Flash ============ Unsuccesful Login");
-					redAttr.addFlashAttribute("flash", "Unsuccesful Login");
-				}
+				} /*else {
+					if (validCapcha) {
+						logger.info("Flash ============ Unsuccesful Login");
+						redAttr.addFlashAttribute("flash", "Unsuccesful Login");
+					} else {
+						redAttr.addFlashAttribute("flash", "Capcha verification failed");
+					}
+				}*/
 			} catch (DataException e) {
 				logger.info(e.getMessageDetail());
-				redAttr.addFlashAttribute("flash", e.getMessageDetail());
+				/*if (!validCapcha)
+					redAttr.addFlashAttribute("flash", "Capcha verification failed");
+				else*/
+					redAttr.addFlashAttribute("flash", e.getMessageDetail());
 			}
 		} else if (name != "" && request.getParameter("usertype").equals("e")) {
 			try {
 				Map<String, String> result = ModelManager.validateExternalUserById(name, pwd);
-				if (result != null) {
+				if (result != null /*&& validCapcha*/) {
 					session.setAttribute("role", result.get("role"));
 					session.setAttribute("id", Integer.valueOf(result.get("id")));
 					session.setAttribute("name", result.get("name"));
 					return "redirect:/home";
-				} else {
-					redAttr.addFlashAttribute("flash", "Unsuccesful Login");
-				}
+				} /*else {
+					if (validCapcha) {
+						logger.info("Flash ============ Unsuccesful Login");
+						redAttr.addFlashAttribute("flash", "Unsuccesful Login");
+					} else {
+						redAttr.addFlashAttribute("flash", "Capcha verification failed");
+					}
+				}*/
 			} catch (DataException e) {
-				redAttr.addFlashAttribute("flash", e.getMessageDetail());
+				/*if (!validCapcha)
+					redAttr.addFlashAttribute("flash", "Capcha verification failed");
+				else*/
+					redAttr.addFlashAttribute("flash", e.getMessageDetail());
 			}
 		}
 		return "redirect:/login";

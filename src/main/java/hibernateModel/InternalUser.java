@@ -5,7 +5,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ public class InternalUser {
 
 	public InternalUser(int emp_id, String name, String ssn, String email, String address, String zipcode,
 			String gender, String user_name, String password, String role, String contact_no, String priv, long salary,
-			long threshold, Set<InternalAuthorization> internalAuth, Set<Transaction> transactions) {
+			long threshold) {
 		this.emp_id = emp_id;
 		this.name = name;
 		this.ssn = ssn;
@@ -37,12 +38,11 @@ public class InternalUser {
 		this.role = role;
 		this.salary = salary;
 		this.threshold = threshold;
-		this.internalAuth = internalAuth;
-		this.transactions = transactions;
 	}
 
 	@Id
 	@Column(name = "emp_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int emp_id;
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -62,17 +62,12 @@ public class InternalUser {
 	private String password;
 	@Column(name = "role", nullable = false)
 	private String role;
-
 	@Column(name = "contact_no", nullable = false)
 	private String contact_no;
 	@Column(name = "salary", nullable = false)
 	private long salary;
 	@Column(name = "threshold", nullable = false)
 	private long threshold;
-
-	@OneToMany(mappedBy = "intUser", cascade = CascadeType.ALL)
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private Set<InternalAuthorization> internalAuth;
 
 	@OneToMany(mappedBy = "internalUser", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -88,14 +83,6 @@ public class InternalUser {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public void setName(String name) {
@@ -158,6 +145,14 @@ public class InternalUser {
 		this.password = password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public String getContact_no() {
 		return contact_no;
 	}
@@ -180,14 +175,6 @@ public class InternalUser {
 
 	public void setThreshold(long threshold) {
 		this.threshold = threshold;
-	}
-
-	public Set<InternalAuthorization> getInternalAuth() {
-		return internalAuth;
-	}
-
-	public void setInternalAuth(Set<InternalAuthorization> internalAuth) {
-		this.internalAuth = internalAuth;
 	}
 
 	public Set<Transaction> getTransactions() {

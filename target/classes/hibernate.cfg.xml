@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/bank?createDatabaseIfNotExist=true</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">user</property>
+
+		<!-- Database connection settings -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">true</property>
+
+		<!-- JDBC connection pool (use the built in) -->
+		<property name="connection.pool_size">1</property>
+		
+		<!-- Drop and Create database (use the built in)
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.import_files">
+            /resources/database.sql
+        </property> -->
+        
+		<mapping class="hibernateModel.Accounts" />
+		<mapping class="hibernateModel.CreditCards" />
+		<mapping class="hibernateModel.DebitCards" />
+		<mapping class="hibernateModel.ExternalAuthorization" />
+		<mapping class="hibernateModel.InternalAuthorization" />
+		<mapping class="hibernateModel.ExternalUser" />
+		<mapping class="hibernateModel.InternalUser" />
+		<mapping class="hibernateModel.Transaction" />
+	</session-factory>
+</hibernate-configuration>

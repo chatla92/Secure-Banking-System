@@ -23,12 +23,11 @@ public class Accounts {
 
 	}
 
-	public Accounts(String acc_id, String type, long balance, ExternalUser extUser, Set<Cards> cards) {
+	public Accounts(String acc_id, String type, float balance, ExternalUser extUser) {
 		this.acc_id = acc_id;
 		this.type = type;
 		this.balance = balance;
 		this.extUser = extUser;
-		this.cards = cards;
 	}
 
 	@Id
@@ -39,7 +38,7 @@ public class Accounts {
 	private String type;
 
 	@Column(name = "balance", nullable = false)
-	private long balance;
+	private float balance;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -47,22 +46,18 @@ public class Accounts {
 
 	@OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private Set<Cards> cards;
+	private Set<DebitCards> debitCards;
 
-	public Set<Cards> getCards() {
-		return cards;
-	}
-
-	public void setCards(Set<Cards> cards) {
-		this.cards = cards;
-	}
+	@OneToMany(mappedBy = "accId", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private Set<CreditCards> creditCards;
 
 	public String getAcc_id() {
 		return acc_id;
 	}
 
-	public void setAcc_id(String acc_id) {
-		this.acc_id = acc_id;
+	public void setAcc_id(String accId) {
+		this.acc_id = accId;
 	}
 
 	public String getType() {
@@ -73,11 +68,11 @@ public class Accounts {
 		this.type = type;
 	}
 
-	public long getBalance() {
+	public float getBalance() {
 		return balance;
 	}
 
-	public void setBalance(long balance) {
+	public void setBalance(float balance) {
 		this.balance = balance;
 	}
 
@@ -88,4 +83,21 @@ public class Accounts {
 	public void setExtUser(ExternalUser extUser) {
 		this.extUser = extUser;
 	}
+
+	public Set<DebitCards> getDebitCards() {
+		return debitCards;
+	}
+
+	public void setDebitCards(Set<DebitCards> debitCards) {
+		this.debitCards = debitCards;
+	}
+
+	public Set<CreditCards> getCreditCards() {
+		return creditCards;
+	}
+
+	public void setCreditCards(Set<CreditCards> creditCards) {
+		this.creditCards = creditCards;
+	}
+
 }
