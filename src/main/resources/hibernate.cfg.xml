@@ -6,7 +6,7 @@
 	<session-factory>
 		<!-- Database connection settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost:3306/bank</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/bank?createDatabaseIfNotExist=true</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">user</property>
 
@@ -21,9 +21,16 @@
 
 		<!-- JDBC connection pool (use the built in) -->
 		<property name="connection.pool_size">1</property>
-
+		
+		<!-- Drop and Create database (use the built in)
+        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.import_files">
+            /resources/database.sql
+        </property> -->
+        
 		<mapping class="hibernateModel.Accounts" />
-		<mapping class="hibernateModel.Cards" />
+		<mapping class="hibernateModel.CreditCards" />
+		<mapping class="hibernateModel.DebitCards" />
 		<mapping class="hibernateModel.ExternalAuthorization" />
 		<mapping class="hibernateModel.InternalAuthorization" />
 		<mapping class="hibernateModel.ExternalUser" />

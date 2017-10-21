@@ -5,6 +5,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -38,6 +40,7 @@ public class ExternalUser {
 
 	@Id
 	@Column(name = "user_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int user_id;
 
 	@Column(name = "name", nullable = false)
@@ -80,28 +83,12 @@ public class ExternalUser {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private Set<Accounts> accounts;
 
-	public Set<Accounts> getAccounts() {
-		return accounts;
-	}
-
-	public void setAccounts(Set<Accounts> accounts) {
-		this.accounts = accounts;
-	}
-
 	public int getUser_id() {
 		return user_id;
 	}
 
 	public void setUser_id(int user_id) {
 		this.user_id = user_id;
-	}
-
-	public int getAttempt() {
-		return attempt;
-	}
-
-	public void setAttempt(int attempt) {
-		this.attempt = attempt;
 	}
 
 	public String getName() {
@@ -176,6 +163,14 @@ public class ExternalUser {
 		this.password = password;
 	}
 
+	public int getAttempt() {
+		return attempt;
+	}
+
+	public void setAttempt(int attempt) {
+		this.attempt = attempt;
+	}
+
 	public String getRole() {
 		return role;
 	}
@@ -190,6 +185,14 @@ public class ExternalUser {
 
 	public void setThreshold(long threshold) {
 		this.threshold = threshold;
+	}
+
+	public Set<Accounts> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Set<Accounts> accounts) {
+		this.accounts = accounts;
 	}
 
 }

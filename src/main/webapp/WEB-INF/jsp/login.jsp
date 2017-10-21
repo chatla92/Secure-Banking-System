@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-	<link rel="stylesheet"
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <link rel="stylesheet"
 		href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 	<title>Welcome</title>
 </head>
@@ -21,6 +22,7 @@
       <button type="submit" class="btn btn-default" id="submit" type="submit">
         <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Log in</button>
     </div>
-  </form>
+        <div class="g-recaptcha" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>
+    </form>
 </body>
 </html>

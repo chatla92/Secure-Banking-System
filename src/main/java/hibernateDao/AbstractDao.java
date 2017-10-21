@@ -42,6 +42,8 @@ public class AbstractDao<T> {
 			session.getTransaction().commit();
 		} catch (Exception exception) {
 			if (session != null) {
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {
@@ -70,7 +72,8 @@ public class AbstractDao<T> {
 			session.getTransaction().commit();
 		} catch (Exception exception) {
 			if (session != null) {
-				System.out.println("rolling back srini" + exception);
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {
@@ -99,7 +102,8 @@ public class AbstractDao<T> {
 			session.getTransaction().commit();
 		} catch (Exception exception) {
 			if (session != null) {
-				System.out.println("rolling back srini" + exception);
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {
@@ -124,7 +128,8 @@ public class AbstractDao<T> {
 			success = true;
 		} catch (Exception exception) {
 			if (session != null) {
-				System.out.println("rolling back srini" + exception);
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {
@@ -149,6 +154,8 @@ public class AbstractDao<T> {
 			success = true;
 		} catch (Exception exception) {
 			if (session != null) {
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {
@@ -173,6 +180,8 @@ public class AbstractDao<T> {
 			success = true;
 		} catch (Exception exception) {
 			if (session != null) {
+				System.out.println("rolling back: ");
+				exception.printStackTrace();
 				session.getTransaction().rollback();
 			}
 		} finally {

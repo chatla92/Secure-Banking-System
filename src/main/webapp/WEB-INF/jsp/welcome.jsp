@@ -3,20 +3,21 @@
 <head>
 <link rel="stylesheet"
 	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <title>Welcome</title>
 </head>
 <body>
+	
 	<div>
 		<span style=${dis1}>
-			<label for="acount">Account of the Customer:</label>
-	    	<input type="text" maxlength="250" name="acount">
+			<label for="account">Account of the Customer:</label>
+	    	<input id="account" type="text" maxlength="250" name="account">
 	    </span>
 	    <span>
-			<button type="button"
-				onclick="location.href = '/securebank/modify';">
+			<button id ="modify" type="button">
 				<span class="glyphicon glyphicon-pencil"></span> Modify
 			</button>
-		</span>>
+		</span>
 	</div>
 	<div>
 	<button style=${dis2} type="button"
@@ -38,4 +39,20 @@
 		</div>
 	</section>
 </body>
+	<script>
+		var acc = "${dis1}";
+		$("#modify").click(function(){
+			if(acc!=="display:None") {
+				if($("#account").val()===""){
+					alert("Account Number cannot be empty")
+				}
+				else{ 
+					window.location = '/securebank/modify?id='+$("#account").val();
+				}
+			}
+			else{ 
+				window.location = '/securebank/modify';
+			}
+		});
+	</script>
 </html>

@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import security.DataException;
+import security.ModelManager;
+import security.ModelUtil;
 
 @Controller
 public class HomeController {
@@ -40,19 +42,17 @@ public class HomeController {
 			}
 			String name = (String) mSession.getAttribute("name");
 			String role = (String) mSession.getAttribute("role");
-			if(role.equals("Ind")||role.equals("MR")) {
-				model.addAttribute("dis1", "display:None");
-				model.addAttribute("dis2", "display:None");	
-			} else {
-				model.addAttribute("dis1", "display:block");
-				model.addAttribute("dis2", "position: fixed; right: 10px; top: 5px");	
-			}
 			model.addAttribute("greeting", name);
 			model.addAttribute("tagline", "Home Controller");
-			retPage = "welcome";
+			if (role.equals("Ind") || role.equals("MR")) {
+				model.addAttribute("AccountList", ModelManager.getAccountList(id));
+				return "individual";
+			} else {
+				return "tier1";
+			}
+
 		} else {
-			retPage = "redirect:/login";
+			return "redirect:/login";
 		}
-		return retPage;
 	}
 }

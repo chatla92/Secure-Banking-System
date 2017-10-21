@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import security.DataException;
 import security.ModelManager;
@@ -36,7 +37,8 @@ public class ModifyController {
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.GET)
-	public String welcome(Model model, HttpServletRequest request) {
+	public String welcome(Model model, HttpServletRequest request,
+			@RequestParam(value = "id", required = false) String account) {
 		if (request.getSession(false) != null) {
 			try {
 				setUserDetails(request);
@@ -44,7 +46,7 @@ public class ModifyController {
 					Map<String, String> map = ModelManager.getModifiableData(id);
 					model.addAllAttributes(map);
 				} else {
-					model.addAllAttributes(ModelManager.getExtUserInfo(request.getParameter("account")));
+					model.addAllAttributes(ModelManager.getExtUserInfo(account));
 				}
 			} catch (DataException e) {
 				if (e.getMessageDetail().equals(LOGIN_FAILED))
@@ -66,14 +68,16 @@ public class ModifyController {
 				return "redirect:/login";
 			}
 			Map<String, String> map = new HashMap<String, String>();
+			System.out.println(request);
 			map.put("username", request.getParameter("username"));
 			map.put("address", request.getParameter("address"));
 			map.put("phone", request.getParameter("phone"));
 			map.put("zipcode", request.getParameter("zipcode"));
 			map.put("email", request.getParameter("email"));
 			map.put("gender", request.getParameter("gender"));
-			ModelManager.setModifiableData(id, map);
-			return "home";
+			System.out.println(map);
+			ModelManager.setModifiableData(map.get("username"), map);
+			return "redirect:/home";
 		}
 		return "redirect:/login";
 	}

@@ -18,25 +18,23 @@ public class InternalAuthorization {
 
 	}
 
-	public InternalAuthorization(int id, Transaction transaction, InternalUser intUser, boolean auth_state) {
-		this.id = id;
+	public InternalAuthorization(Transaction transaction, String role, boolean auth_state) {
 		this.transaction = transaction;
-		this.intUser = intUser;
+		this.role = role;
 		this.auth_state = auth_state;
 	}
 
 	@Id
 	@Column(name = "id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "trans_id", nullable = false)
 	private Transaction transaction;
 
-	@ManyToOne()
-	@JoinColumn(name = "emp_id", nullable = false)
-	private InternalUser intUser;
+	@Column(name = "role", nullable = false)
+	private String role;
 
 	@Column(name = "auth_state", nullable = false)
 	private boolean auth_state;
@@ -53,16 +51,16 @@ public class InternalAuthorization {
 		return transaction;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
-	}
-
-	public InternalUser getIntUser() {
-		return intUser;
-	}
-
-	public void setIntUser(InternalUser intUser) {
-		this.intUser = intUser;
 	}
 
 	public boolean isAuth_state() {
@@ -72,4 +70,5 @@ public class InternalAuthorization {
 	public void setAuth_state(boolean auth_state) {
 		this.auth_state = auth_state;
 	}
+
 }
