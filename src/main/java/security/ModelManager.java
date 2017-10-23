@@ -126,6 +126,12 @@ public class ModelManager {
 		return ModelUtil.convertToListOfTransaction(trans);
 	}
 
+	public static List<HashMap<String, String>> getCompleteRequest(String acc_no){
+		ExternalAuthorizationDao exDAO = new ExternalAuthorizationDao();
+		List<Transaction> trans = exDAO.getByType(acc_no);
+		return ModelUtil.convertToListOfTransaction(trans);
+	}
+
 	public static ArrayList<LinkedHashMap<String, String>> getAccountList(int userId) {
 		ArrayList<LinkedHashMap<String, String>> list = new ArrayList<LinkedHashMap<String, String>>();
 		ExternalUserDao dao = new ExternalUserDao();

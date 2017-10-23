@@ -18,8 +18,7 @@ public class ExternalAuthorization {
 
 	}
 
-	public ExternalAuthorization(int id, Transaction transactions, Accounts account, boolean isAuth) {
-		this.id = id;
+	public ExternalAuthorization(Transaction transactions, Accounts account, boolean isAuth) {
 		this.transactions = transactions;
 		this.account = account;
 		this.isAuth = isAuth;
