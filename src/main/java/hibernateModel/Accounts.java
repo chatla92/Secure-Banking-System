@@ -16,7 +16,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
-@Table(name = "Accounts")
+@Table(name = "accounts")
 public class Accounts {
 
 	public Accounts() {

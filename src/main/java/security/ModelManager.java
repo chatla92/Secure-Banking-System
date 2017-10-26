@@ -9,6 +9,7 @@ import javax.persistence.NoResultException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import hibernateDao.AccountsDao;
 import hibernateDao.CreditCardsDao;
@@ -16,6 +17,7 @@ import hibernateDao.DebitCardsDao;
 import hibernateDao.ExternalUserDao;
 import hibernateDao.InternalAuthorizationDao;
 import hibernateDao.InternalUserDao;
+import hibernateDao.ModifyUserInfoDao;
 import hibernateDao.TransactionDao;
 import hibernateModel.Accounts;
 import hibernateModel.CreditCards;
@@ -23,6 +25,7 @@ import hibernateModel.DebitCards;
 import hibernateModel.ExternalUser;
 import hibernateModel.InternalAuthorization;
 import hibernateModel.InternalUser;
+import hibernateModel.ModifyUserInfo;
 import hibernateModel.Transaction;
 
 public class ModelManager {
@@ -93,10 +96,19 @@ public class ModelManager {
 		return null;
 	}
 
-	public static void setModifiableData(String username, Map<String, String> map) {
-		ExternalUserDao dao = new ExternalUserDao();
-		ExternalUser user = dao.get(username, "user_name");
-		dao.update(ModelUtil.updateUserInfo(user, map));
+	public static void setModifiableData(String username, Map<String, String> map) throws DataException {
+		try {
+			ExternalUserDao dao = new ExternalUserDao();
+			ExternalUser user = dao.get(username, "user_name");
+			ModifyUserInfoDao modifyDao = new ModifyUserInfoDao();
+			if (modifyDao.get(username, "user_name") != null) {
+				modifyDao.update(ModelUtil.provideUserInfo(username, map));
+			} else {
+				modifyDao.create(ModelUtil.provideUserInfo(username, map));
+			}
+		} catch (Exception e) {
+			throw new DataException("Fileds cannot be empty or something");
+		}
 	}
 
 	public static Map<String, String> getModifiableData(int id) {

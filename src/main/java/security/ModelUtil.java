@@ -11,6 +11,7 @@ import hibernateModel.CreditCards;
 import hibernateModel.DebitCards;
 import hibernateModel.ExternalUser;
 import hibernateModel.InternalUser;
+import hibernateModel.ModifyUserInfo;
 import hibernateModel.Transaction;
 
 public class ModelUtil {
@@ -44,14 +45,10 @@ public class ModelUtil {
 		return result;
 	}
 
-	public static ExternalUser updateUserInfo(ExternalUser user, Map<String, String> map) {
-		user.setUser_name(map.get("username"));
-		user.setAddress(map.get("address"));
-		user.setContact_no(map.get("phone"));
-		user.setZipcode(map.get("zipcode"));
-		user.setEmail(map.get("email"));
-		user.setGender(map.get("gender"));
-		return user;
+	public static ModifyUserInfo provideUserInfo(String user, Map<String, String> map) {
+		ModifyUserInfo userInfo = new ModifyUserInfo(map.get("email"), map.get("address"), map.get("zipcode"),
+				map.get("gender"), map.get("phone"), user);
+		return userInfo;
 	}
 
 	public static void getAccountsAsList(ExternalUser user, ArrayList<LinkedHashMap<String, String>> list) {

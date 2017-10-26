@@ -1,4 +1,4 @@
-%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
     <title>Transactions</title>
@@ -8,7 +8,6 @@
         <tr>
             <th>Date</th>
             <th>Receiver</th>
-            <th>Sender</th>
             <th>Type</th>
             <th>Amount</th>
         </tr>
@@ -16,7 +15,6 @@
             <tr>
                 <td>${TransactionList.get("date")}</td>
                 <td>${TransactionList.get("reciver")}</td>
-                <td>${TransactionList.get("sender")}</td>
                 <td>${TransactionList.get("type")}</td>
                 <td>${TransactionList.get("amt")}</td>
             </tr>

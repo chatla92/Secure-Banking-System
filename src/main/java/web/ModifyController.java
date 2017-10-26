@@ -76,8 +76,13 @@ public class ModifyController {
 			map.put("email", request.getParameter("email"));
 			map.put("gender", request.getParameter("gender"));
 			System.out.println(map);
-			ModelManager.setModifiableData(map.get("username"), map);
-			return "redirect:/home";
+			try {
+				ModelManager.setModifiableData(map.get("username"), map);
+				return "redirect:/home";
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return "redirect:/login";
 	}

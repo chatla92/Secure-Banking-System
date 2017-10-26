@@ -100,6 +100,8 @@ CREATE TABLE IF NOT EXISTS modify_user_info (
   gender varchar(1) DEFAULT NULL,
   contact_no varchar(10) DEFAULT NULL,
   user_name varchar(50) DEFAULT NULL,
+  id int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (id),
   FOREIGN KEY (user_name) REFERENCES external_users (user_name)
 );
 /* Insert into dummy tuples into database*/
@@ -115,4 +117,4 @@ INSERT INTO transactions VALUES (120030,'800','ACC','456456','123',false, true,1
 INSERT INTO transactions VALUES (NULL,'800','ACC','456456','123',false, true,0,123456789);
 INSERT INTO pending_auth VALUES (120030,123,1, NULL);
 INSERT INTO pending_auth_ext VALUES (120031,'123456',1, NULL);
-INSERT INTO modify_user_info VALUES ('Dummy_user@gmail.com', 'Changed Uni', '85281', 'F', '9444444444', 'Dummyuser')
+INSERT INTO modify_user_info VALUES ('Dummy_user@gmail.com', 'Changed Uni', '85281', 'F', '9444444444', 'Dummyuser', 1000)
