@@ -3,10 +3,10 @@ package util;
 public class RoleCheck {
 
 	public static boolean isInternal(String role) {
-		return role.equals("T1") || role.equals("T2") || role.equals("IA");
+		return role.equalsIgnoreCase("Tier1") || role.equalsIgnoreCase("Tier2") || role.equalsIgnoreCase("IA");
 	}
 
 	public static boolean isExternal(String role) {
-		return role.equals("Ind") || role.equals("MR");
+		return role.equalsIgnoreCase("Ind") || role.equalsIgnoreCase("MR");
 	}
 }

@@ -7,7 +7,7 @@
 </head>
 <body>
 	<p>${flash}</p>
-	<form action="/create" method="post">
+	<form action="/securebank/create" method="post">
 			
 		<label for="Name">Name:</label>
 		<input type="text" maxlength="50" name="name">
@@ -24,7 +24,7 @@
 		<label for="address">Address:</label>
 		<input type="text" maxlength="100" name="address">
 
-		<label for="zipcode">Description:</label>
+		<label for="zipcode">ZipCode:</label>
 		<input type="number" maxlength="5" name="zipcode">
 
 		<label for="email">Email:</label>

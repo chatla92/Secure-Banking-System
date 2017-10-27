@@ -2,7 +2,6 @@ package web;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +10,6 @@ import security.DataException;
 
 @Controller
 public class AcessPIIController {
-	private static final Logger logger = Logger.getLogger(HomeController.class);
 
 	String role;
 	int id;

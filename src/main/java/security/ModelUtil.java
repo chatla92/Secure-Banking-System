@@ -9,6 +9,7 @@ import java.util.Map;
 import hibernateModel.Accounts;
 import hibernateModel.CreditCards;
 import hibernateModel.DebitCards;
+import hibernateModel.ExternalAuthorization;
 import hibernateModel.ExternalUser;
 import hibernateModel.InternalUser;
 import hibernateModel.ModifyUserInfo;
@@ -73,6 +74,7 @@ public class ModelUtil {
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		for (Transaction tran : trans) {
 			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("trans_id", ""+tran.getTrans_id());
 			map.put("date", "Dummy date");
 			map.put("reciver", tran.getTo_acc());
 			map.put("type", tran.getType());
@@ -80,6 +82,27 @@ public class ModelUtil {
 			list.add(map);
 		}
 		return list;
+	}
+
+	public static HashMap<String, String> getTransForExtAuthEntry(ExternalAuthorization extAuth) {
+		Transaction trans = extAuth.getTransactions();
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("trans_id", "" + trans.getTrans_id());
+		map.put("from", trans.getTo_acc());
+		map.put("to", trans.getFrom_acc());
+		map.put("amt", "" + trans.getAmount());
+		return map;
+	}
+
+	public static HashMap<String, String> getMapForPendingModify(ModifyUserInfo modify) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("user_name", modify.getUser_name());
+		map.put("email", modify.getEmail());
+		map.put("address", modify.getAddress());
+		map.put("zipcode", modify.getZipcode());
+		map.put("gender", modify.getGender());
+		map.put("contact_no", modify.getContact_no());
+		return map;
 	}
 
 }

@@ -8,7 +8,7 @@
 <body>
 	<form action="/securebank/modify" method="post">
 		<label for="username">Username:</label>
-		<input type="text" maxlength="50" name="username" value="${username}">
+		<input type="text" maxlength="50" name="username" readonly="readonly" value="${username}">
 
 		<label for="address">Address:</label>
 		<input type="text" maxlength="100" name="address" value="${address}">

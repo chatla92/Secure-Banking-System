@@ -76,12 +76,12 @@ public class CreateController {
 			map.put("role", request.getParameter("role"));
 			map.put("threshold", request.getParameter("threshold"));
 			try {
-				ModelManager.createData(map);
+				ModelManager.createNewUser(map);
 			} catch (DataException e) {
 				redAttr.addFlashAttribute("flash", e.getMessageDetail());
 				return "redirect:/create";
 			}
-			return "home";
+			return "redirect:/home";
 		}
 		return "redirect:/login";
 	}
