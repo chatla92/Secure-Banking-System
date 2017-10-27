@@ -4,6 +4,7 @@
     <title>Transactions</title>
 </head>
 <body>
+<p>Complete Transaction Log</p>
     <table>
         <tr>
             <th>Date</th>

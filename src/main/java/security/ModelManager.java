@@ -190,6 +190,12 @@ public class ModelManager {
         List<Transaction> trans = transDao.getByType(acc_no);
         return ModelUtil.convertToListOfTransaction(trans);
     }
+    
+    public static List<HashMap<String, String>> getAllTrasactions() {
+        TransactionDao transDao = new TransactionDao();
+        List<Transaction> trans = transDao.findAll();
+        return ModelUtil.convertToListOfTransaction(trans);
+    }
 
     public static ArrayList<LinkedHashMap<String, String>> getAccountList(int userId) {
         ArrayList<LinkedHashMap<String, String>> list = new ArrayList<LinkedHashMap<String, String>>();
