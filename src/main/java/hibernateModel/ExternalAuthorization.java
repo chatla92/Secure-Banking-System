@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Pending_Auth_Ext")
+@Table(name = "pending_auth_ext")
 public class ExternalAuthorization {
 
 	public ExternalAuthorization() {

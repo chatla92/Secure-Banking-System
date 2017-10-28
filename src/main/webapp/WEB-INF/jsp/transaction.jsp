@@ -7,6 +7,7 @@
     <table>
         <tr>
             <th>Date</th>
+            <th>Sender</th>
             <th>Receiver</th>
             <th>Type</th>
             <th>Amount</th>
@@ -14,6 +15,7 @@
         <c:forEach items="${transactionlist}" var="TransactionList">
             <tr>
                 <td>${TransactionList.get("date")}</td>
+                <td>${TransactionList.get("sender")}</td>
                 <td>${TransactionList.get("reciver")}</td>
                 <td>${TransactionList.get("type")}</td>
                 <td>${TransactionList.get("amt")}</td>

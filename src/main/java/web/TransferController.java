@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import security.DataException;
 import security.ModelManager;
-import util.RoleCheck;
+
 
 @Controller
 public class TransferController {
@@ -20,6 +20,7 @@ public class TransferController {
 	int id;
 	String name;
 	public static ArrayList<ArrayList<String>> list;
+	public static boolean OTPrequired;
 
 	public void setUserDetails(HttpServletRequest request) throws DataException {
 		try {
@@ -66,6 +67,9 @@ public class TransferController {
 				if (request.getParameter("action").equals("transfer")) {
 					isSuccess = ModelManager.handleExtTransfer(email, amount, fromDetail[1], fromDetail[0]);
 				}
+			}
+			if(OTPrequired){
+			    return "redirect:/otp";
 			}
 			redAttr.addFlashAttribute("home", isSuccess ? "Transfer successful" : "Transfer is unsuccessful");
 		}

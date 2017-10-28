@@ -76,6 +76,7 @@ public class ModelUtil {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("trans_id", ""+tran.getTrans_id());
 			map.put("date", "Dummy date");
+			map.put("sender", tran.getFrom_acc());
 			map.put("reciver", tran.getTo_acc());
 			map.put("type", tran.getType());
 			map.put("amt", "" + tran.getAmount());

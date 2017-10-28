@@ -49,6 +49,9 @@ public class HomeController {
 				model.addAttribute("AccountList", ModelManager.getAccountList(id));
 				return role.equals("Ind") ? "individual" : "merchant";
 			} else {
+			    if(role.equals("IA")){
+			        return "admin";
+			    }
 				model.addAttribute("tier", role.equals("Tier1") ? "None" : "Block");
 				return "tier1";
 			}
