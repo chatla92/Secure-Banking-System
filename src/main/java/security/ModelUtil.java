@@ -28,6 +28,17 @@ public class ModelUtil {
 		return map;
 	}
 
+	public static Map<String, String> getEmpInfoAsMap(InternalUser user) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("username", user.getUser_name());
+		map.put("address", user.getAddress());
+		map.put("phone", user.getContact_no());
+		map.put("zipcode", user.getZipcode());
+		map.put("email", user.getEmail());
+		map.put("gender", user.getGender());
+		return map;
+	}
+
 	public static Map<String, String> getMapForExSessionDetail(ExternalUser user) {
 		Map<String, String> result = null;
 		result = new HashMap<String, String>();
@@ -74,7 +85,7 @@ public class ModelUtil {
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		for (Transaction tran : trans) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("trans_id", ""+tran.getTrans_id());
+			map.put("trans_id", "" + tran.getTrans_id());
 			map.put("date", "Dummy date");
 			map.put("sender", tran.getFrom_acc());
 			map.put("reciver", tran.getTo_acc());
@@ -104,6 +115,16 @@ public class ModelUtil {
 		map.put("gender", modify.getGender());
 		map.put("contact_no", modify.getContact_no());
 		return map;
+	}
+
+	public static InternalUser updateEmpInfo(InternalUser username, Map<String, String> map) {
+		username.setUser_name(map.get("username"));
+		username.setEmail(map.get("email"));
+		username.setAddress(map.get("address"));
+		username.setZipcode(map.get("zipcode"));
+		username.setGender(map.get("gender"));
+		username.setContact_no(map.get("phone"));
+		return username;
 	}
 
 }

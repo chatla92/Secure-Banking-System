@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import security.DataException;
 import security.ModelManager;
+import util.RoleCheck;
 
 
 @Controller
@@ -60,13 +61,11 @@ public class TransferController {
 					String cvv = request.getParameter("cvv");
 					isSuccess = ModelManager.handleExtRequest(ccNo, cvv, amount, fromDetail[1], fromDetail[0]);
 				}
-			} else if (role.equalsIgnoreCase("Tier2")) {
-				String email = request.getParameter("email");
+			} else if (RoleCheck.isInternal(role)) {
+				String fromAcc = request.getParameter("fromAcc");
 				float amount = Float.valueOf(request.getParameter("amount"));
-				String[] fromDetail = request.getParameter("fromAcc").split(",");
-				if (request.getParameter("action").equals("transfer")) {
-					isSuccess = ModelManager.handleExtTransfer(email, amount, fromDetail[1], fromDetail[0]);
-				}
+				String toAcc = request.getParameter("toAcc");
+				isSuccess = ModelManager.handleIntTransfer(fromAcc, amount, toAcc);
 			}
 			if(OTPrequired){
 			    return "redirect:/otp";

@@ -7,6 +7,7 @@
 	<title>Welcome</title>
 </head>
 <body>
+<button onclick="window.location='/securebank/forgotpassword';">Forgot Password?</button>
 	<form action="/securebank/login" method="post" id="formtemp">
     <div class="form-group">
 	<p>${flash}</p>

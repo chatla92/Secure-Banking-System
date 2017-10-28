@@ -22,10 +22,10 @@ public class InternalUser {
 
 	}
 
-	public InternalUser(int emp_id, String name, String ssn, String email, String address, String zipcode,
-			String gender, String user_name, String password, String role, String contact_no, String priv, long salary,
+	public InternalUser( String name, String ssn, String email, String address, String zipcode,
+			String gender, String user_name, String password, String role, String contact_no, long salary,
 			long threshold) {
-		this.emp_id = emp_id;
+		
 		this.name = name;
 		this.ssn = ssn;
 		this.email = email;

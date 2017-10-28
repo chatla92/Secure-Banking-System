@@ -4,6 +4,9 @@
     <title>Transactions</title>
 </head>
 <body>
+
+<button onclick="window.print();">Print this page</button>
+<button onclick="window.location='/securebank/home';">home</button>
     <table>
         <tr>
             <th>Date</th>

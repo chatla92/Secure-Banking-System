@@ -1,52 +1,59 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-	<html>
+<html>
+<head>
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>Welcome</title>
+</head>
+<body>
 
-	<head>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-		<title>Create User Account</title>
-	</head>
-
-	<body>
-		<p>${flash}</p>
-		<form action="/create" method="post">
-
-			<label for="Name">Name:</label>
-			<input type="text" maxlength="50" name="name">
-
-			<label for="ssn">SSN:</label>
-			<input type="text" maxlength="50" name="ssn">
-
-			<label for="username">Username:</label>
-			<input type="text" maxlength="50" name="username">
-
-			<label for="password">Password:</label>
-			<input type="text" maxlength="50" name="password">
-
-			<label for="address">Address:</label>
-			<input type="text" maxlength="100" name="address">
-
-			<label for="zipcode">Description:</label>
-			<input type="number" maxlength="5" name="zipcode">
-
-			<label for="email">Email:</label>
-			<input type="text" maxlength="20" name="email">
-
-			<label for="gender">Gender:</label>
-			<input type="text" maxlength="1" name="gender">
-
-			<label for="phone">Phone:</label>
-			<input type="number" maxlength="10" name="phone">
-
-			<label for="threshold">Threshold:</label>
-			<input type="number" maxlength="10" name="threshold">
-
-			<label for="role">Role:</label>
-			<input type="text" maxlength="50" name="role">
-
-			<button type="submit" id="submit" type="submit">Save</button>
-			<button type="reset" value="Reset">Reset</button>
-			<button onclick="location.href = '/securebank/home';" type="button">Cancel</button>
+	<div>
+		<span> <label for="account">Employee Id:</label> <input
+			id="account" type="text" maxlength="250" name="account">
+		</span> <span>
+			<button id="modify" type="button">
+				<span class="glyphicon glyphicon-pencil"></span> Modify
+			</button>
+		</span>
+	</div>
+	<div>
+	<form action="/securebank/authorize/modify" method="get">
+		<button type="submit" id="submit">Authorize modifications</button>
+	</form>
+	</div>
+	<div>
+		<button style="position: fixed; right: 10px; top: 5px" type="button"
+			onclick="location.href = '/securebank/create';">
+			<span class="glyphicon glyphicon-plus"></span> Create New User
+		</button>
+	</div>
+	<button style="position: fixed; right: 10px; top: 5px" type="button"
+		onclick="location.href = '/securebank/logout';">
+		<span class="glyphicon glyphicon-log-out"></span> Log out
+	</button>
+	<p>${home}</p>
+	<section>
+		<div class="jumbotron">
+			<div class="container">
+				<h1>${greeting}</h1>
+				<p>${tagline}</p>
+			</div>
+		</div>
+		<form action="/securebank/log" method="get">
+			<button type="submit" id="submit">Get Log</button>
 		</form>
-	</body>
-
-	</html>
+	</section>
+</body>
+<script>
+        $("#modify").click(function(){
+          if($("#account").val()===""){
+              alert("Account Number cannot be empty")
+          }
+          else{ 
+              window.location = '/securebank/modify?id='+$("#account").val();
+          }
+       });
+    </script>
+</html>

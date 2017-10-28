@@ -10,7 +10,7 @@
 <body>
 
 	<div>
-		<span> <label for="account">Account of the Customer:</label> <input
+		<span> <label for="account">Employee Id:</label> <input
 			id="account" type="text" maxlength="250" name="account">
 		</span> <span>
 			<button id="modify" type="button">
@@ -19,9 +19,6 @@
 		</span>
 	</div>
 	<div>
-	<form style="display:${tier}" action="/securebank/authorize/critical" method="get">
-		<button type="submit" id="submit">Authorize transactions</button>
-	</form>
 	<form action="/securebank/authorize/modify" method="get">
 		<button type="submit" id="submit">Authorize modifications</button>
 	</form>
@@ -44,13 +41,8 @@
 				<p>${tagline}</p>
 			</div>
 		</div>
-		<form action="/securebank/transfer" method="post">
-			<label for="fromAcc">From:</label> <input type="text" maxlength="100"
-				name="fromAcc"> <label for="toAcc">To:</label> <input
-				type="text" maxlength="100" name="toAcc"> <label
-				for="amount">Amount:</label> <input type="number" name="amount">
-
-			<button type="submit" id="submit">Make the Transaction</button>
+		<form action="/securebank/log" method="get">
+			<button type="submit" id="submit">Get Log</button>
 		</form>
 	</section>
 </body>
