@@ -51,16 +51,21 @@ public class TransferController {
 						isSuccess = ModelManager.handleExtRequest(email, amount, fromDetail[1], fromDetail[0]);
 					}
 				}
-			} else if(role.equals("MR")) {
-				if(request.getParameter("action").equals("merchant")) {
+			} else if (role.equals("MR")) {
+				if (request.getParameter("action").equals("merchant")) {
 					float amount = Float.valueOf(request.getParameter("amount"));
 					String[] fromDetail = request.getParameter("fromAcc").split(",");
 					String ccNo = request.getParameter("cc");
 					String cvv = request.getParameter("cvv");
 					isSuccess = ModelManager.handleExtRequest(ccNo, cvv, amount, fromDetail[1], fromDetail[0]);
 				}
-			} else if(role.equalsIgnoreCase("Tier2")) {
-				//yet to implement
+			} else if (role.equalsIgnoreCase("Tier2")) {
+				String email = request.getParameter("email");
+				float amount = Float.valueOf(request.getParameter("amount"));
+				String[] fromDetail = request.getParameter("fromAcc").split(",");
+				if (request.getParameter("action").equals("transfer")) {
+					isSuccess = ModelManager.handleExtTransfer(email, amount, fromDetail[1], fromDetail[0]);
+				}
 			}
 			redAttr.addFlashAttribute("home", isSuccess ? "Transfer successful" : "Transfer is unsuccessful");
 		}
