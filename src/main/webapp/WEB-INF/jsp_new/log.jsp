@@ -9,9 +9,8 @@
     <title>Transactions</title>
 </head>
 <body>
-    <div class="container">
-        <div class="section">
-            <nav>
+<div class="container">
+    <nav>
                 <div class="nav-wrapper">
                   <a class="brand-logo"> Secure Banking Application</a>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">
@@ -19,15 +18,21 @@
                       <li><a href="/securebank/logout">Logout<i class="material-icons left">exit_to_app</i></a></li>
                   </ul>
                 </div>
-                </nav>
+    </nav>
+    <h4 class="center-align">Complete Transaction Log</h4>
+    <div class="section">
     <table class="striped">
         <tr>
-            <th>Sender/Receiver</th>
+            <th>Date</th>
+            <th>Sender</th>
+            <th>Receiver</th>
             <th>Type</th>
             <th>Amount</th>
         </tr>
         <c:forEach items="${transactionlist}" var="TransactionList">
             <tr>
+                <td>${TransactionList.get("date")}</td>
+                <td>${TransactionList.get("sender")}</td>
                 <td>${TransactionList.get("reciver")}</td>
                 <td>${TransactionList.get("type")}</td>
                 <td>${TransactionList.get("amt")}</td>
@@ -35,20 +40,19 @@
         </c:forEach>
     </table>
     </div>
+
     <div class="row">
-        <div>
     <button class="btn waves-effect waves-light right green accent-4" type="button"
     onclick="location.href = '/securebank/home';">
-        <i class="material-icons left">arrow_back</i> Back
+        Back<i class="material-icons right">arrow_back</i> 
     </button>
-        </div>
-        <div>
+                <div>
             <button class="btn waves-effect waves-light left green accent-4" type="button"
-    onclick="window.print();">
-        Print <i class="material-icons right">local_printshop</i> 
-    </button>
+                onclick="window.print();">
+                    Print <i class="material-icons right">local_printshop</i> 
+            </button>
         </div>
     </div>
-    </div>
+</div>
 </body>
 </html>

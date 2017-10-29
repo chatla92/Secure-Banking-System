@@ -49,8 +49,11 @@
               </ul>               -->
       <!--      <button type="submit" class="btn btn-default" id="submit" type="submit">
               <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Log in</button>-->
+              <div class="row">
+              <button class="btn waves-effect waves-light left green accent-4" onclick="window.location='/securebank/forgotpassword';">Forgot Password?</button>
             <button type="submit" class="btn waves-effect waves-light right green accent-4" id="submit" type="submit">
                 Log in<i class="material-icons right">send</i></button>
+              </div>
           </div>
         </div>
         </form>

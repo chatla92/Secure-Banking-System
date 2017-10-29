@@ -18,16 +18,19 @@
 </head>
 <body>
     <div class="section container">
+        <nav>
+                <div class="nav-wrapper">
+                  <a class="brand-logo"> Secure Banking Application</a>
+                  <ul id="nav-mobile" class="right hide-on-med-and-down">
+                      <li><a href="/securebank/home">Home<i class="material-icons left">home</i></a></li>
+                      <li><a href="/securebank/logout">Logout<i class="material-icons left">exit_to_app</i></a></li>
+                  </ul>
+                </div>
+                </nav>
         <section class="card-panel grey lighten-3">
     <p>${home}</p>
     <section>
             <div class="container">
-                <div class="row">
-                    <button class="btn waves-effect waves-light right green accent-4" type="button"
-                        onclick="location.href = '/securebank/logout';">
-                        <span class="glyphicon glyphicon-log-out"></span> Log out
-                    </button>
-                </div>
                 <h1>${greeting}</h1>
                 <p>${tagline}</p>
             </div>
@@ -56,7 +59,7 @@
         <div class="divider"></div>
         <div class="section container">
             <div class="row">
-                <h4 class="center-align"> Modify an existing customer: </h4>
+                <h5 class="center-align"> Modify an existing customer: </h5>
                 <div class="input-field col s12">
                     <span>
                         <label for="account">Account of the Customer:</label>
@@ -74,7 +77,7 @@
          </div>    
         <div class="divider"></div>
         <div class="section container">
-            <form action="/pending" method="post">
+<!--            <form action="/pending" method="post">
                                 <div class="input-field">
                                     <select name="pending">
                                             <option value="trx">Pending Transaction authorization</option>
@@ -82,10 +85,19 @@
                                     </select>
                                 </div>
                                     <button type="submit" class="btn waves-effect waves-light right green accent-4" id="submit">Get Details</button>
-                    </form>
+                    </form>-->
+            <div class="row">
+                <form style="display:${tier}" action="/securebank/authorize/critical" method="get">
+                        <button type="submit" class="btn waves-effect waves-light right green accent-4" id="submit">Authorize transactions</button>
+                </form>
+                <form action="/securebank/authorize/modify" method="get">
+                        <button type="submit" class="btn waves-effect waves-light left green accent-4" id="submit">Authorize modifications</button>
+                </form>
+            </div>
         </div>
         <div class="divider"></div>
         <div class="section container">
+            <h5 class="center-align"> Request/Transfer Money </h5> 
 		<form action="/transfer" method="post">
 		<div class="input-field col s12">
                     <label for="fromAcc">From Account Number:</label>
