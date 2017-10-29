@@ -31,9 +31,10 @@
             </div>
           </div>
           <div class="row">
-          <div class="input-field col s12">
+          <div id="wrap" class="input-field col s12">
               <input type="password" maxlength="64" name="password" class="validate" required>
-            <label for="password">Password:</label>
+            <img id="icon" src="keyboard.png">
+              <label for="password">Password:</label>
           </div>
           </div>
           <div class="g-recaptcha" data-callback="capcha_filled" data-expired-callback="capcha_expired" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>
