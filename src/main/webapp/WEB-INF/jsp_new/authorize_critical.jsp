@@ -35,7 +35,7 @@
 
 			<c:forEach items="${criticalList}" var="trans">
 			<tr>
-                            <td><input type="radio" name="id" id="id" value="${trans.get('trans_id')}"/><label for="id"></label></td>
+                            <td><input type="radio" name="id" id="${trans.get('trans_id')}" value="${trans.get('trans_id')}"/><label for="${trans.get('trans_id')}"></label></td>
                 <td>${trans.get("date")}</td>
                 <td>${trans.get("reciver")}</td>
                 <td>${trans.get("type")}</td>

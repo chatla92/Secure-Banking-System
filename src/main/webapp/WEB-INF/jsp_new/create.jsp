@@ -28,7 +28,7 @@
                 </div>
             </nav>
         <div class="card-panel grey lighten-3">
-	<form action="/create" method="post">
+	<form action="/securebank/create" method="post" id="createuser">
 		<div class="row">
                 <div class="input-field col s12">	
                     <label for="Name">Name:</label>

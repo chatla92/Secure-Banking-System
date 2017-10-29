@@ -98,7 +98,7 @@
         <div class="divider"></div>
         <div class="section container">
             <h5 class="center-align"> Request/Transfer Money </h5> 
-		<form action="/transfer" method="post">
+		<form action="/securebank/transfer" method="post">
 		<div class="input-field col s12">
                     <label for="fromAcc">From Account Number:</label>
                     <input type="text" maxlength="100" name="fromAcc" required>

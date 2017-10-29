@@ -33,7 +33,7 @@
 
 			<c:forEach items="${PendingList}" var="mods">
 			<tr>
-				<td><input type="radio" name="id" value="${mods.get("id")}">${entry.key}(${entry.value})</option></td>
+                            <td><input type="radio" name="id" id="${mods.get("id")}" value="${mods.get("id")}">${entry.key}(${entry.value})<label for="${mods.get("id")}"></label></td>
 				<td>${trans.get("from")}</td>
 				<td>${trans.get("to")}</td>
 				<td>${trans.get("amt")}</td>

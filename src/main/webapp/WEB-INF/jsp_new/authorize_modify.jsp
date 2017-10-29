@@ -41,8 +41,8 @@
 			</tr>
 			<c:forEach items="${modifylist}" var="ModifyList">
 				<tr>
-                                        <td><p><input type="radio" name="modify" id="modify"
-                                              value="${ModifyList.get('user_name')}" /><label for="modify"> </label></p>
+                                        <td><p><input type="radio" name="modify" id="${ModifyList.get('user_name')}"
+                                              value="${ModifyList.get('user_name')}" /><label for="${ModifyList.get('user_name')}"> </label></p>
 					<td>${ModifyList.get("user_name")}</td>
 					<td>${ModifyList.get("email")}</td>
 					<td>${ModifyList.get("address")}</td>
