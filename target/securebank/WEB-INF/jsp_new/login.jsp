@@ -9,7 +9,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src='https://www.google.com/recaptcha/api.js?onload=reCaptchaCallback&render=explicit'></script>
-          
+    <script type="text/javascript" src="keyboard.js"></script>
+    <link rel="stylesheet" href="keyboard.css">
 	<title>Login</title>
         <script>
             $(document).ready(function() {
@@ -31,8 +32,9 @@
             </div>
           </div>
           <div class="row">
-          <div class="input-field col s12">
-              <input type="password" maxlength="64" name="password" class="validate" required>
+          <div id="wrap" class="input-field col s12">
+              <input id="keyboard" type="password" maxlength="64" name="password" class="validate" required>
+              <img id="icon" src="keyboard.png">
             <label for="password">Password:</label>
           </div>
           </div>

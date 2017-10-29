@@ -16,6 +16,7 @@
 				<th>Zipcode</th>
 				<th>Gender</th>
 				<th>Contact Number</th>
+				<th>Threshold</th>
 			</tr>
 			<c:forEach items="${modifylist}" var="ModifyList">
 				<tr>
@@ -27,6 +28,7 @@
 					<td>${ModifyList.get("zipcode")}</td>
 					<td>${ModifyList.get("gender")}</td>
 					<td>${ModifyList.get("contact_no")}</td>
+					<td>${ModifyList.get("threshold")}</td>
 				</tr>
 
 			</c:forEach>
