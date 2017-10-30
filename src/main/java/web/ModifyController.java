@@ -20,7 +20,6 @@ import util.RoleCheck;
 public class ModifyController {
 
 	private static final String LOGIN_FAILED = "Login failed";
-	private static final Logger logger = Logger.getLogger(HomeController.class);
 
 	String role;
 	int id;
@@ -45,8 +44,10 @@ public class ModifyController {
 				if (RoleCheck.isExternal(role)) {
 					Map<String, String> map = ModelManager.getModifiableData(id);
 					model.addAllAttributes(map);
-				} else {
+				} else if (!role.equalsIgnoreCase("IA")) {
 					model.addAllAttributes(ModelManager.getExtUserInfo(account));
+				} else {
+					model.addAllAttributes(ModelManager.getIntUserInfo(account));
 				}
 			} catch (DataException e) {
 				if (e.getMessageDetail().equals(LOGIN_FAILED))
@@ -76,8 +77,17 @@ public class ModifyController {
 			map.put("email", request.getParameter("email"));
 			map.put("gender", request.getParameter("gender"));
 			System.out.println(map);
-			ModelManager.setModifiableData(map.get("username"), map);
-			return "redirect:/home";
+			try {
+				if (role.equalsIgnoreCase("IA")) {
+					ModelManager.modifyEmpData(map.get("username"), map);
+				} else
+					ModelManager.setModifiableData(map.get("username"), map);
+
+				return "redirect:/home";
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return "redirect:/login";
 	}

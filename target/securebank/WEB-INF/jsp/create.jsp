@@ -7,7 +7,7 @@
 </head>
 <body>
 	<p>${flash}</p>
-	<form action="/create" method="post">
+	<form action="/securebank/create" method="post" id="createuser">
 			
 		<label for="Name">Name:</label>
 		<input type="text" maxlength="50" name="name">
@@ -24,7 +24,7 @@
 		<label for="address">Address:</label>
 		<input type="text" maxlength="100" name="address">
 
-		<label for="zipcode">Description:</label>
+		<label for="zipcode">ZipCode:</label>
 		<input type="number" maxlength="5" name="zipcode">
 
 		<label for="email">Email:</label>
@@ -40,7 +40,10 @@
 		<input type="number" maxlength="10" name="threshold">
 					
 		<label for="role">Role:</label>
-		<input type="text" maxlength="50" name="role">
+		 <select name="role" form="createuser">
+  			<option value="MR">Merchant</option>
+  			<option value="Ind">Individual</option>
+	  	</select>
 		
 		<button type="submit" id="submit" type="submit">Save</button>
 		<button type="reset" value="Reset">Reset</button>

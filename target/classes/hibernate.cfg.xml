@@ -35,6 +35,7 @@
 		<mapping class="hibernateModel.InternalAuthorization" />
 		<mapping class="hibernateModel.ExternalUser" />
 		<mapping class="hibernateModel.InternalUser" />
+		<mapping class="hibernateModel.ModifyUserInfo" />
 		<mapping class="hibernateModel.Transaction" />
 	</session-factory>
 </hibernate-configuration>

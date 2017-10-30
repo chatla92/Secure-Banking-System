@@ -11,15 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Pending_Auth_Ext")
+@Table(name = "pending_auth_ext")
 public class ExternalAuthorization {
 
 	public ExternalAuthorization() {
 
 	}
 
-	public ExternalAuthorization(int id, Transaction transactions, Accounts account, boolean isAuth) {
-		this.id = id;
+	public ExternalAuthorization(Transaction transactions, Accounts account, boolean isAuth) {
 		this.transactions = transactions;
 		this.account = account;
 		this.isAuth = isAuth;

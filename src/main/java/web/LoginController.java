@@ -67,48 +67,46 @@ public class LoginController {
 			try {
 				Map<String, String> result = ModelManager.validateInternalUserById(name, pwd);
 				logger.info("Result from DB is " + result);
-				if (result != null /*&& validCapcha*/) {
+				if (result != null /* && validCapcha */) {
 					// createsession
 					session.setAttribute("role", result.get("role"));
 					session.setAttribute("id", Integer.valueOf(result.get("id")));
 					session.setAttribute("name", result.get("name"));
 					return "redirect:/home";
-				} /*else {
-					if (validCapcha) {
-						logger.info("Flash ============ Unsuccesful Login");
-						redAttr.addFlashAttribute("flash", "Unsuccesful Login");
-					} else {
-						redAttr.addFlashAttribute("flash", "Capcha verification failed");
-					}
-				}*/
+				} /*
+					 * else { if (validCapcha) {
+					 * logger.info("Flash ============ Unsuccesful Login");
+					 * redAttr.addFlashAttribute("flash", "Unsuccesful Login"); } else {
+					 * redAttr.addFlashAttribute("flash", "Capcha verification failed"); } }
+					 */
 			} catch (DataException e) {
 				logger.info(e.getMessageDetail());
-				/*if (!validCapcha)
-					redAttr.addFlashAttribute("flash", "Capcha verification failed");
-				else*/
-					redAttr.addFlashAttribute("flash", e.getMessageDetail());
+				/*
+				 * if (!validCapcha) redAttr.addFlashAttribute("flash",
+				 * "Capcha verification failed"); else
+				 */
+				redAttr.addFlashAttribute("flash", e.getMessageDetail());
 			}
 		} else if (name != "" && request.getParameter("usertype").equals("e")) {
 			try {
 				Map<String, String> result = ModelManager.validateExternalUserById(name, pwd);
-				if (result != null /*&& validCapcha*/) {
+				if (result != null /* && validCapcha */) {
 					session.setAttribute("role", result.get("role"));
 					session.setAttribute("id", Integer.valueOf(result.get("id")));
 					session.setAttribute("name", result.get("name"));
 					return "redirect:/home";
-				} /*else {
-					if (validCapcha) {
-						logger.info("Flash ============ Unsuccesful Login");
-						redAttr.addFlashAttribute("flash", "Unsuccesful Login");
-					} else {
-						redAttr.addFlashAttribute("flash", "Capcha verification failed");
-					}
-				}*/
+				} /*
+					 * else { if (validCapcha) {
+					 * logger.info("Flash ============ Unsuccesful Login");
+					 * redAttr.addFlashAttribute("flash", "Unsuccesful Login"); } else {
+					 * redAttr.addFlashAttribute("flash", "Capcha verification failed"); } }
+					 */
 			} catch (DataException e) {
-				/*if (!validCapcha)
-					redAttr.addFlashAttribute("flash", "Capcha verification failed");
-				else*/
-					redAttr.addFlashAttribute("flash", e.getMessageDetail());
+				/*
+				 * if (!validCapcha) redAttr.addFlashAttribute("flash",
+				 * "Capcha verification failed"); else
+				 */
+				redAttr.addFlashAttribute("flash", e.getMessageDetail());
 			}
 		}
 		return "redirect:/login";

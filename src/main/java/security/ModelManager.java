@@ -1,6 +1,7 @@
 package security;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,21 +10,26 @@ import javax.persistence.NoResultException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
-
 import hibernateDao.AccountsDao;
 import hibernateDao.CreditCardsDao;
 import hibernateDao.DebitCardsDao;
+import hibernateDao.ExternalAuthorizationDao;
 import hibernateDao.ExternalUserDao;
 import hibernateDao.InternalAuthorizationDao;
 import hibernateDao.InternalUserDao;
+import hibernateDao.ModifyUserInfoDao;
 import hibernateDao.TransactionDao;
 import hibernateModel.Accounts;
 import hibernateModel.CreditCards;
 import hibernateModel.DebitCards;
+import hibernateModel.ExternalAuthorization;
 import hibernateModel.ExternalUser;
 import hibernateModel.InternalAuthorization;
 import hibernateModel.InternalUser;
+import hibernateModel.ModifyUserInfo;
 import hibernateModel.Transaction;
+import web.OTPController;
+import web.TransferController;
 
 public class ModelManager {
 	private static final Logger logger = Logger.getLogger(ModelManager.class);
@@ -93,10 +99,17 @@ public class ModelManager {
 		return null;
 	}
 
-	public static void setModifiableData(String username, Map<String, String> map) {
-		ExternalUserDao dao = new ExternalUserDao();
-		ExternalUser user = dao.get(username, "user_name");
-		dao.update(ModelUtil.updateUserInfo(user, map));
+	public static void setModifiableData(String username, Map<String, String> map) throws DataException {
+		try {
+			ModifyUserInfoDao modifyDao = new ModifyUserInfoDao();
+			if (modifyDao.get(username, "user_name") != null) {
+				modifyDao.update(ModelUtil.provideUserInfo(username, map));
+			} else {
+				modifyDao.create(ModelUtil.provideUserInfo(username, map));
+			}
+		} catch (Exception e) {
+			throw new DataException("Fileds cannot be empty or something");
+		}
 	}
 
 	public static Map<String, String> getModifiableData(int id) {
@@ -106,16 +119,68 @@ public class ModelManager {
 
 	}
 
-	public static void createData(Map<String, String> map) throws DataException {
+	public static void createNewUser(Map<String, String> map) throws DataException {
 		ExternalUserDao dao = new ExternalUserDao();
 		ExternalUser user = new ExternalUser(map.get("name"), map.get("ssn"), map.get("email"), map.get("address"),
-				map.get("zipcode"), map.get("gender"), map.get("user_name"), map.get("contact_no"), map.get("password"),
+				map.get("zipcode"), map.get("gender"), map.get("username"), map.get("phone"), map.get("password"),
 				map.get("role"), 3, Long.valueOf(map.get("threshold")));
+		try {
+			dao.create(user);
+			Accounts acc = createAccount(user);
+			createCreditCard(acc);
+			// createDebitCard(acc);
+		} catch (ConstraintViolationException e) {
+			throw new DataException(DUPLICATE_USER);
+		}
+	}
+
+	public static void createIntUser(Map<String, String> map) throws DataException {
+		InternalUserDao dao = new InternalUserDao();
+		InternalUser user = new InternalUser(map.get("name"), map.get("ssn"), map.get("email"), map.get("address"),
+				map.get("zipcode"), map.get("gender"), map.get("username"), map.get("password"), map.get("role"),
+				map.get("phone"), 80000, 2000);
 		try {
 			dao.create(user);
 		} catch (ConstraintViolationException e) {
 			throw new DataException(DUPLICATE_USER);
 		}
+	}
+
+	public static void changePassword(String email, String newPass) {
+		ExternalUserDao dao = new ExternalUserDao();
+		ExternalUser user = dao.get(email, "email");
+		user.setPassword(newPass);
+		user.setAttempt(3);
+		dao.update(user);
+	}
+
+	private static void createDebitCard(Accounts acc) {
+		DebitCardsDao dDao = new DebitCardsDao();
+		List<DebitCards> list = dDao.findAll();
+		long maxAccNo = list.stream().map(n -> Long.valueOf(n.getCard_no())).max(Long::compare).get();
+		DebitCards debit = new DebitCards();
+		debit.setAccounts(acc);
+		debit.setActive(true);
+		debit.setCard_no("" + (maxAccNo + 1));
+		debit.setCvv(234);
+		// dDao.create(debit);
+	}
+
+	private static void createCreditCard(Accounts acc) {
+		CreditCardsDao dDao = new CreditCardsDao();
+		List<CreditCards> list = dDao.findAll();
+		long maxAccNo = list.stream().map(n -> Long.valueOf(n.getCard_no())).max(Long::compare).get();
+		CreditCards debit = new CreditCards("" + (maxAccNo + 1), acc, 234, 0);
+		dDao.create(debit);
+	}
+
+	private static Accounts createAccount(ExternalUser user) {
+		AccountsDao accountsDao = new AccountsDao();
+		List<Accounts> listOfAccounts = accountsDao.findAll();
+		long maxAccNo = listOfAccounts.stream().map(n -> Long.valueOf(n.getAcc_id())).max(Long::compare).get();
+		Accounts account = new Accounts("" + (maxAccNo + 1), "Saving", 1000, user);
+		accountsDao.create(account);
+		return accountsDao.get("" + (maxAccNo + 1), "acc_id");
 	}
 
 	public static Map<String, String> getExtUserInfo(String accountId) throws DataException {
@@ -139,6 +204,12 @@ public class ModelManager {
 		return ModelUtil.convertToListOfTransaction(trans);
 	}
 
+	public static List<HashMap<String, String>> getAllTrasactions() {
+		TransactionDao transDao = new TransactionDao();
+		List<Transaction> trans = transDao.findAll();
+		return ModelUtil.convertToListOfTransaction(trans);
+	}
+
 	public static ArrayList<LinkedHashMap<String, String>> getAccountList(int userId) {
 		ArrayList<LinkedHashMap<String, String>> list = new ArrayList<LinkedHashMap<String, String>>();
 		ExternalUserDao dao = new ExternalUserDao();
@@ -156,9 +227,9 @@ public class ModelManager {
 			if (type.equals("Debit")) {
 				isSuccessful = handleDebitCardTrans(extUser, number, amount);
 			} else if (type.equals("Credit")) {
-				isSuccessful = handleCreditCardTrans(extUser, number, amount);
+				isSuccessful = handleCreditCardTrans(extUser, number, amount, false);
 			} else {
-				isSuccessful = handleAccountTrans(extUser, number, amount);
+				isSuccessful = handleAccountTrans(extUser, number, amount, false);
 			}
 		} catch (Exception e) {
 			return false;
@@ -166,15 +237,35 @@ public class ModelManager {
 		return isSuccessful;
 	}
 
-	private static boolean handleAccountTrans(ExternalUser extUser, String number, float amount) {
+	public static boolean handleIntTransfer(String fromAcc, float amount, String toAcc) {
+		boolean isSuccessful = false;
+		try {
+			AccountsDao accDao = new AccountsDao();
+			ExternalUser extUser = accDao.get(toAcc, "acc_id").getExtUser();
+			isSuccessful = handleAccountTrans(extUser, fromAcc, amount, true);
+		} catch (Exception e) {
+			return false;
+		}
+		return isSuccessful;
+	}
+
+	private static boolean handleAccountTrans(ExternalUser extUser, String number, float amount, boolean isInternal) {
 
 		AccountsDao accDao = new AccountsDao();
 		Accounts acc = accDao.get(number, "acc_id");
 		boolean isSuccessful = false;
 		if (amount > acc.getExtUser().getThreshold()) {
-			Transaction transaction = createTransEntry(amount, "DEB", number,
-					extUser.getAccounts().iterator().next().getAcc_id(), true, false, Integer.valueOf(acc.getAcc_id()));
-			createInternalAuthEntry(transaction);
+			if (isInternal) {
+				return false;
+			}
+			TransferController.OTPrequired = true;
+
+			OTPController.amount = amount;
+			OTPController.transType = "DEB";
+			OTPController.fromAccNo = number;
+			OTPController.toAccNo = extUser.getAccounts().iterator().next().getAcc_id();
+			OTPController.initBy = Integer.valueOf(acc.getAcc_id());
+
 			isSuccessful = true;
 		} else {
 			float temp = acc.getBalance() - amount;
@@ -196,10 +287,14 @@ public class ModelManager {
 		DebitCards cards = dao.get(number, "card_no");
 		boolean isSuccessful = false;
 		if (amount > cards.getAccounts().getExtUser().getThreshold()) {
-			Transaction transaction = createTransEntry(amount, "DEB", number,
-					extUser.getAccounts().iterator().next().getAcc_id(), true, false,
-					Integer.valueOf(cards.getAccounts().getAcc_id()));
-			createInternalAuthEntry(transaction);
+			TransferController.OTPrequired = true;
+
+			OTPController.amount = amount;
+			OTPController.transType = "DEB";
+			OTPController.fromAccNo = number;
+			OTPController.toAccNo = extUser.getAccounts().iterator().next().getAcc_id();
+			OTPController.initBy = Integer.valueOf(cards.getAccounts().getAcc_id());
+
 			isSuccessful = true;
 		} else {
 			AccountsDao accDao = new AccountsDao();
@@ -218,14 +313,20 @@ public class ModelManager {
 		return isSuccessful;
 	}
 
-	private static boolean handleCreditCardTrans(ExternalUser extUser, String number, float amount) {
+	private static boolean handleCreditCardTrans(ExternalUser extUser, String number, float amount,
+			boolean isMerchant) {
 		CreditCardsDao dao = new CreditCardsDao();
 		CreditCards cards = dao.get(number, "card_no");
 		if (cards.getOutstandingamount() + amount <= cards.getMaxlimit()) {
-			createTransEntry(amount, "DEB", number, extUser.getAccounts().iterator().next().getAcc_id(), true, false,
+			Transaction ccTrans = createTransEntry(amount, "DEB", number,
+					extUser.getAccounts().iterator().next().getAcc_id(), true, false,
 					Integer.valueOf(cards.getAccId().getAcc_id()));
 			cards.setOutstandingamount(cards.getOutstandingamount() + amount);
-			updateReceiverAccount(extUser, amount);
+			if (isMerchant) {
+				createPendingExtAuth(ccTrans, cards.getAccId());
+			} else {
+				updateReceiverAccount(extUser, amount);
+			}
 			dao.update(cards);
 			return true;
 		}
@@ -244,18 +345,211 @@ public class ModelManager {
 		accDao.update(rec_acc);
 	}
 
-	private static void createInternalAuthEntry(Transaction transaction) {
+	public static void createInternalAuthEntry(Transaction transaction) {
 		InternalAuthorizationDao authDao = new InternalAuthorizationDao();
 		InternalAuthorization internalAuth = new InternalAuthorization(transaction, "Tier2", false);
 		authDao.create(internalAuth);
 	}
 
-	private static Transaction createTransEntry(float amount, String type, String fromAcc, String toAcc,
+	public static Transaction createTransEntry(float amount, String type, String fromAcc, String toAcc,
 			boolean isCritical, boolean status, int initiatedBy) {
 		TransactionDao transDao = new TransactionDao();
 		Transaction transaction = new Transaction(amount, type, fromAcc, toAcc, isCritical, status, initiatedBy);
 		transDao.create(transaction);
 		return transaction;
+	}
+
+	public static ArrayList<HashMap<String, String>> getAuthRequests(int id) {
+		ExternalUserDao dao = new ExternalUserDao();
+		ExternalUser user = dao.get(id, "user_id");
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+		for (Accounts account : user.getAccounts()) {
+			ExternalAuthorizationDao extDao = new ExternalAuthorizationDao();
+			List<ExternalAuthorization> listOfExtAuth = extDao.getByAccountId(account);
+			for (ExternalAuthorization extAuth : listOfExtAuth) {
+				list.add(ModelUtil.getTransForExtAuthEntry(extAuth));
+			}
+		}
+		return list;
+	}
+
+	public static String handleExtRequestApprove(String transId, boolean isApproved, int userId) {
+		boolean isSuccessful = false;
+		try {
+			String accId = deleteExternalAuthEntry(transId);
+			isSuccessful = updateTransEntry(transId, isApproved, userId, accId);
+		} catch (Exception e) {
+		}
+		return isSuccessful ? "Approved successfully" : "Balance is not sufficient";
+	}
+
+	private static boolean updateTransEntry(String transId, boolean isApproved, int userId, String accId) {
+		TransactionDao transactionDao = new TransactionDao();
+		Transaction trans = transactionDao.get(Integer.valueOf(transId), "trans_id");
+		AccountsDao accDao = new AccountsDao();
+		Accounts account = accDao.get(accId, "acc_id");
+		boolean isSuccessful = false;
+		if (trans.getAmount() <= account.getBalance()) {
+			account.setBalance(account.getBalance() - trans.getAmount());
+			accDao.update(account);
+			isSuccessful = true;
+		}
+		trans.setIscritical(false);
+		trans.setTransactionStatus(isApproved && isSuccessful);
+		trans.setInternalUser(userId);
+		transactionDao.update(trans);
+		return isSuccessful;
+	}
+
+	private static String deleteExternalAuthEntry(String transId) throws Exception {
+		String accountId = null;
+		ExternalAuthorizationDao extDao = new ExternalAuthorizationDao();
+		Transaction transaction = new TransactionDao().get(Integer.valueOf(transId), "trans_id");
+		ExternalAuthorization extAuthorization = null;
+		for (ExternalAuthorization extAuth : transaction.getExternalAuth()) {
+			if (Integer.valueOf(transId) == extAuth.getTransactions().getTrans_id()) {
+				extAuthorization = extAuth;
+				break;
+			}
+		}
+		if (extAuthorization == null)
+			throw new Exception();
+		accountId = extAuthorization.getAccount().getAcc_id();
+		extDao.delete(extAuthorization);
+		return accountId;
+	}
+
+	public static boolean handleExtRequest(String email, float amount, String accType, String fromAcc) {
+		ExternalUserDao extDao = new ExternalUserDao();
+		ExternalUser extUser = extDao.get(email, "email");
+		String toAccountId = extUser.getAccounts().iterator().next().getAcc_id();
+		Transaction transaction = createTransEntry(amount, "DEB", fromAcc, toAccountId, false, true,
+				Integer.valueOf(fromAcc));
+		return createPendingExtAuth(transaction, extUser.getAccounts().iterator().next());
+	}
+
+	private static boolean createPendingExtAuth(Transaction transaction, Accounts accounts) {
+		boolean isSuccessful = false;
+		try {
+			ExternalAuthorizationDao extDao = new ExternalAuthorizationDao();
+			ExternalAuthorization extAuth = new ExternalAuthorization(transaction, accounts, false);
+			extDao.create(extAuth);
+			isSuccessful = true;
+		} catch (Exception e) {
+
+		}
+		return isSuccessful;
+	}
+
+	public static ArrayList<HashMap<String, String>> getModifyRequests() {
+		ModifyUserInfoDao modifyDao = new ModifyUserInfoDao();
+		List<ModifyUserInfo> listOfModifyInfo = modifyDao.findAll();
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+		for (ModifyUserInfo modify : listOfModifyInfo) {
+			list.add(ModelUtil.getMapForPendingModify(modify));
+		}
+		return list;
+	}
+
+	public static String handleIntModifyApprove(String userName, boolean equals) {
+		boolean isSuccessful = false;
+		try {
+			ModifyUserInfoDao modifyDao = new ModifyUserInfoDao();
+			ModifyUserInfo userInfo = modifyDao.get(userName, "user_name");
+			isSuccessful = updateExtUserEntry(userInfo);
+			modifyDao.delete(userInfo);
+
+		} catch (Exception e) {
+		}
+		return isSuccessful ? "Modified successfully" : "Balance is not sufficient";
+	}
+
+	private static boolean updateExtUserEntry(ModifyUserInfo userInfo) {
+		boolean isSuccessful = false;
+		try {
+			ExternalUserDao extDao = new ExternalUserDao();
+			ExternalUser extUser = extDao.get(userInfo.getUser_name(), "user_name");
+			extUser.setEmail(userInfo.getEmail());
+			extUser.setAddress(userInfo.getAddress());
+			extUser.setZipcode(userInfo.getZipcode());
+			extUser.setContact_no(userInfo.getContact_no());
+			extUser.setGender(userInfo.getGender());
+			extDao.update(extUser);
+			isSuccessful = true;
+		} catch (Exception e) {
+
+		}
+		return isSuccessful;
+	}
+
+	public static List<HashMap<String, String>> getCriticalTxs() {
+		TransactionDao transDao = new TransactionDao();
+		return ModelUtil.convertToListOfTransaction(transDao.getCriticalTrans());
+	}
+
+	public static String handleCriticalTxs(String transId, boolean isApproved, int approvedBy) {
+		boolean isSuccessful = false;
+		try {
+			deleteInternalAuthEntry(transId);
+			TransactionDao transactionDao = new TransactionDao();
+			Transaction trans = transactionDao.get(Integer.valueOf(transId), "trans_id");
+			String accId = trans.getTo_acc();
+			isSuccessful = updateTransEntry(transId, isApproved, approvedBy, accId);
+			// email notification needed
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSuccessful ? "Modified successfully" : "Balance is not sufficient";
+	}
+
+	private static void deleteInternalAuthEntry(String transId) throws Exception {
+		InternalAuthorizationDao intDao = new InternalAuthorizationDao();
+		Transaction transaction = new TransactionDao().get(Integer.valueOf(transId), "trans_id");
+		InternalAuthorization intAuthorization = null;
+		for (InternalAuthorization intAuth : transaction.getInternalAuth()) {
+			if (Integer.valueOf(transId) == intAuth.getTransaction().getTrans_id()) {
+				intAuthorization = intAuth;
+				break;
+			}
+		}
+		if (intAuthorization == null)
+			throw new Exception();
+		intDao.delete(intAuthorization);
+	}
+
+	public static boolean handleExtRequest(String ccNo, String cvv, float amount, String string, String string2) {
+		AccountsDao accDao = new AccountsDao();
+		Accounts acc = accDao.get(string2, "acc_id");
+		CreditCardsDao dao = new CreditCardsDao();
+		CreditCards cards = dao.get(ccNo, "card_no");
+		if (cvv.equals("" + cards.getCvv()))
+			return handleCreditCardTrans(acc.getExtUser(), ccNo, amount, true);
+		return false;
+	}
+
+	public static Map<String, String> getIntUserInfo(String empId) throws DataException {
+		try {
+			if (empId != null && !empId.equals("")) {
+				InternalUserDao dao = new InternalUserDao();
+				InternalUser user = dao.get(Integer.valueOf(empId), "emp_id");
+				return ModelUtil.getEmpInfoAsMap(user);
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			throw new DataException(NO_SUCH_ACC_OR_USER);
+		}
+		return null;
+	}
+
+	public static void modifyEmpData(String username, Map<String, String> map) throws DataException {
+		try {
+			InternalUserDao internalUserDao = new InternalUserDao();
+			if (internalUserDao.get(username, "user_name") != null) {
+				internalUserDao.update(ModelUtil.updateEmpInfo(internalUserDao.get(username, "user_name"), map));
+			}
+		} catch (Exception e) {
+			throw new DataException("Fileds cannot be empty or something");
+		}
 	}
 
 }

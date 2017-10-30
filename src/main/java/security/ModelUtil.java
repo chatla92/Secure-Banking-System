@@ -9,13 +9,26 @@ import java.util.Map;
 import hibernateModel.Accounts;
 import hibernateModel.CreditCards;
 import hibernateModel.DebitCards;
+import hibernateModel.ExternalAuthorization;
 import hibernateModel.ExternalUser;
 import hibernateModel.InternalUser;
+import hibernateModel.ModifyUserInfo;
 import hibernateModel.Transaction;
 
 public class ModelUtil {
 
 	public static Map<String, String> getUserInfoAsMap(ExternalUser user) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("username", user.getUser_name());
+		map.put("address", user.getAddress());
+		map.put("phone", user.getContact_no());
+		map.put("zipcode", user.getZipcode());
+		map.put("email", user.getEmail());
+		map.put("gender", user.getGender());
+		return map;
+	}
+
+	public static Map<String, String> getEmpInfoAsMap(InternalUser user) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("username", user.getUser_name());
 		map.put("address", user.getAddress());
@@ -44,14 +57,10 @@ public class ModelUtil {
 		return result;
 	}
 
-	public static ExternalUser updateUserInfo(ExternalUser user, Map<String, String> map) {
-		user.setUser_name(map.get("username"));
-		user.setAddress(map.get("address"));
-		user.setContact_no(map.get("phone"));
-		user.setZipcode(map.get("zipcode"));
-		user.setEmail(map.get("email"));
-		user.setGender(map.get("gender"));
-		return user;
+	public static ModifyUserInfo provideUserInfo(String user, Map<String, String> map) {
+		ModifyUserInfo userInfo = new ModifyUserInfo(map.get("email"), map.get("address"), map.get("zipcode"),
+				map.get("gender"), map.get("phone"), user);
+		return userInfo;
 	}
 
 	public static void getAccountsAsList(ExternalUser user, ArrayList<LinkedHashMap<String, String>> list) {
@@ -76,13 +85,46 @@ public class ModelUtil {
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		for (Transaction tran : trans) {
 			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("trans_id", "" + tran.getTrans_id());
 			map.put("date", "Dummy date");
+			map.put("sender", tran.getFrom_acc());
 			map.put("reciver", tran.getTo_acc());
 			map.put("type", tran.getType());
 			map.put("amt", "" + tran.getAmount());
 			list.add(map);
 		}
 		return list;
+	}
+
+	public static HashMap<String, String> getTransForExtAuthEntry(ExternalAuthorization extAuth) {
+		Transaction trans = extAuth.getTransactions();
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("trans_id", "" + trans.getTrans_id());
+		map.put("from", trans.getTo_acc());
+		map.put("to", trans.getFrom_acc());
+		map.put("amt", "" + trans.getAmount());
+		return map;
+	}
+
+	public static HashMap<String, String> getMapForPendingModify(ModifyUserInfo modify) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("user_name", modify.getUser_name());
+		map.put("email", modify.getEmail());
+		map.put("address", modify.getAddress());
+		map.put("zipcode", modify.getZipcode());
+		map.put("gender", modify.getGender());
+		map.put("contact_no", modify.getContact_no());
+		return map;
+	}
+
+	public static InternalUser updateEmpInfo(InternalUser username, Map<String, String> map) {
+		username.setUser_name(map.get("username"));
+		username.setEmail(map.get("email"));
+		username.setAddress(map.get("address"));
+		username.setZipcode(map.get("zipcode"));
+		username.setGender(map.get("gender"));
+		username.setContact_no(map.get("phone"));
+		return username;
 	}
 
 }

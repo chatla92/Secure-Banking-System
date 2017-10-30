@@ -10,7 +10,8 @@ public class LogOutController {
 	@RequestMapping(value = "/logout")
 
 	public String logout(HttpServletRequest request, RedirectAttributes redAttr) {
-		request.getSession(false).invalidate();
+		if (request.getSession() != null)
+			request.getSession(false).invalidate();
 		redAttr.addFlashAttribute("flash", "logged out successfully!!");
 		return "redirect:/login";
 	}
