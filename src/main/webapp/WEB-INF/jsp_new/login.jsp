@@ -12,8 +12,8 @@
     <script src="<c:url value="/resources/keyboard.js" />"></script>
     <script src="<c:url value="/resources/jquery.keyboard.js" />"></script>
     <script src="<c:url value="/resources/jquery.keyboard.extension-typing.js" />"></script>
-    <link rel="stylesheet" href="<c:url value="/resources/keyboard.css" />">
-    <link rel="stylesheet" href="<c:url value="/resources/jquery.css"/>">
+    <link rel="stylesheet" href="<c:url value="src/main/webapp/resources/keyboard.css" />">
+    <link rel="stylesheet" href="<c:url value="src/main/webapp/resources/jquery.css"/>">
     <script type="text/javascript">
         /* VIRTUAL KEYBOARD DEMO - https://github.com/Mottie/Keyboard */
         $(function() {

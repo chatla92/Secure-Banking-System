@@ -74,7 +74,25 @@
                     </span>
                 </div>
             </div>
-         </div>    
+         </div>
+         <div style="display:${tier}" class="section container">
+            <div class="row">
+                <h5 class="center-align"> Delete existing customer: </h5>
+                <div class="input-field col s12">
+                    <span>
+                        <label for="userid">user_id of the customer:</label>
+                        <input id="userid" type="text" maxlength="250" name="userid">
+                    </span>
+                </div>
+                <div>
+                    <span>
+                        <button id ="delete" class="btn waves-effect waves-light right green accent-4" type="button">
+                            <i class="material-icons right">delete_forever</i> Delete
+                        </button>
+                    </span>
+                </div>
+            </div>
+         </div>        
         <div class="divider"></div>
         <div class="section container">
 <!--            <form action="/pending" method="post">
@@ -128,5 +146,16 @@
               window.location = '/securebank/modify?id='+$("#account").val();
           }
        });
+        $("#delete").click(function(){
+            if($("#userid").val()===""){
+                alert("user_id cannot be empty");
+            }
+            else{
+            	$.ajax({
+                    type: "POST",
+                    url: "/securebank/delete?id="+$("#userid").val(),
+                  });
+            }
+         });
     </script>
 </html>

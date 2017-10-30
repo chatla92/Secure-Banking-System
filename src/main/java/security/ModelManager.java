@@ -552,4 +552,38 @@ public class ModelManager {
 		}
 	}
 
+	public static boolean deleteExtUser(String userId) {
+		try {
+			if (userId != null && !userId.equals("")) {
+				ExternalUserDao extDao = new ExternalUserDao();
+				ExternalUser extUser = extDao.get(Integer.valueOf(userId), "user_id");
+				if (extUser != null) {
+					extDao.delete(extUser);
+					return true;
+				}
+				return false;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return false;
+
+	}
+
+	public static boolean deleteIntUser(String userId) {
+		try {
+			if (userId != null && !userId.equals("")) {
+				InternalUserDao intDao = new InternalUserDao();
+				InternalUser intUser = intDao.get(Integer.valueOf(userId), "emp_id");
+				if (intUser != null) {
+					intDao.delete(intUser);
+					return true;
+				}
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return false;
+	}
+
 }
