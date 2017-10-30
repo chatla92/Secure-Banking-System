@@ -8,12 +8,10 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src='https://www.google.com/recaptcha/api.js?onload=reCaptchaCallback&render=explicit'></script>
-    <script src="<c:url value="/resources/jquery-mousewheel.js" />"></script>
-    <script src="<c:url value="/resources/keyboard.js" />"></script>
-    <script src="<c:url value="/resources/jquery.keyboard.js" />"></script>
-    <script src="<c:url value="/resources/jquery.keyboard.extension-typing.js" />"></script>
-    <link rel="stylesheet" href="<c:url value="src/main/webapp/resources/keyboard.css" />">
-    <link rel="stylesheet" href="<c:url value="src/main/webapp/resources/jquery.css"/>">
+    <script src="https://mottie.github.io/Keyboard/js/jquery.mousewheel.js"></script>
+    <script src="https://mottie.github.io/Keyboard/js/jquery.keyboard.js"></script>
+    <script src="https://mottie.github.io/Keyboard/js/jquery.keyboard.extension-typing.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css">
     <script type="text/javascript">
         /* VIRTUAL KEYBOARD DEMO - https://github.com/Mottie/Keyboard */
         $(function() {
@@ -404,14 +402,13 @@
         body {
             margin-top: 100px;
         }
-
-        #wrap {
-            display: block;
-            margin: 0 auto;
-            width: 200px;
+        #wrap{
+            display : block;
+            margin:0 auto;
+            
         }
     </style>
-    <link rel="stylesheet" href="../../resources/keyboard.css">
+
     <title>Login</title>
     <script>
         $(document).ready(function() {
@@ -433,13 +430,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="input-field col s12">
+                    <div id="wrap" class="input-field col s12">
                         <input id="keyboard" type="password" maxlength="64" name="password" class="validate" required>
-                        <img id="icon" src="../../resources/keyboard.png">
                         <label for="password">Password:</label>
                     </div>
                 </div>
-                <div class="g-recaptcha" data-callback="capcha_filled" data-expired-callback="capcha_expired" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>
+                <div class="g-recaptcha" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>
                 <!--        <div class="g-recaptcha" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>-->
                 <div class="section">
                     <select name="usertype" form="formtemp">
@@ -462,20 +458,4 @@
     </div>
 </div>
 </body>
-
-<script>
-    var allowSubmit=false;
-    function capcha_filled(e){
-        if(e)
-            allowSubmit=true;
-        allowSubmit=false;
-    }
-    function capcha_expired(){
-        allowSubmit=false;
-    }
-    function check_if_capcha_is_filled(){
-        if(allowSubmit===true) return true;
-        //alert('Fill in the capcha!');
-    }
-</script>
 </html>
