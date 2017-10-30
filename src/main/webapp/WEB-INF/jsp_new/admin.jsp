@@ -93,7 +93,7 @@
 								<button id="delete"
 									class="btn waves-effect waves-light right green accent-4"
 									type="button">
-									<i class="material-icons right">delete_forever</i> Delete
+									<i class="material-icons left">delete_forever</i> Delete
 								</button>
 							</span>
 						</div>
