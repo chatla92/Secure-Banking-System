@@ -13,15 +13,6 @@
 
 	<body>
             <div class="section container">
-                <nav>
-                <div class="nav-wrapper">
-                  <a class="brand-logo"> Secure Banking Application</a>
-                  <ul id="nav-mobile" class="right hide-on-med-and-down">
-                      <li><a href="/securebank/home">Home<i class="material-icons left">home</i></a></li>
-                      <li><a href="/securebank/logout">Logout<i class="material-icons left">exit_to_app</i></a></li>
-                  </ul>
-                </div>
-                </nav>
                 <div class="card-panel grey lighten-3">
                     <p>${flash}</p>
                     <form action="/securebank/forgotpassword" method="post">

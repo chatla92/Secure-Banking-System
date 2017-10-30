@@ -433,7 +433,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div id="wrap" class="input-field col s12">
+                    <div class="input-field col s12">
                         <input id="keyboard" type="password" maxlength="64" name="password" class="validate" required>
                         <img id="icon" src="../../resources/keyboard.png">
                         <label for="password">Password:</label>
@@ -454,6 +454,8 @@
                             <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Log in</button>-->
                     <button type="submit" class="btn waves-effect waves-light right green accent-4" id="submit" type="submit">
                         Log in<i class="material-icons right">send</i></button>
+                    <button class="btn waves-effect waves-light left green accent-4" onclick="window.location='/securebank/forgotpassword';">
+                        Forgot password?</button>    
                 </div>
             </div>
         </form>
