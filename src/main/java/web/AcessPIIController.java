@@ -50,12 +50,13 @@ public class AcessPIIController {
 			
 			unmaskedSSN = ModelManager.getPII(Integer.parseInt(request.getParameter("id")), Boolean.parseBoolean(request.getParameter("customer")));
 			if(!unmaskedSSN.equals("")){
-				model.addAttribute("SSN", unmaskedSSN.split(",")[0]);
+				model.addAttribute("SSN", "SSN for above customer "+unmaskedSSN.split(",")[0]);
 				model.addAttribute("name", unmaskedSSN.split(",")[1]);
 			}
-			else
-				model.addAttribute("unmasked_SSN", "Couldn' find the requested PII");
-
+			else{
+				model.addAttribute("SSN", "User Doesn't Exist");
+				model.addAttribute("name","");
+			}
 			return "pii";
 
 		}

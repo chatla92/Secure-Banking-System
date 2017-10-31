@@ -49,7 +49,7 @@
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">Card Title</span>
-              <p>${name}<br>SSN for above customer ${SSN} } </p>
+              <p>${name}<br>${SSN}</p>
             </div>
           </div>
         </div>
