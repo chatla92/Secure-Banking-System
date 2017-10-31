@@ -586,4 +586,28 @@ public class ModelManager {
 		return false;
 	}
 
+	public static String getPII(int id, boolean customer) {
+		String unmaskedSSN = "";
+		if (customer) {
+			ExternalUserDao externalUserDao = new ExternalUserDao();
+			ExternalUser externalUser = externalUserDao.get(id, "user_id");
+
+			if (externalUser != null) {
+				String maskedSSN = externalUser.getSsn();
+				unmaskedSSN = HashingMasking.unMask(maskedSSN);
+				unmaskedSSN+=","+externalUser.getName();
+			}
+
+		} else if(!customer) {
+			InternalUserDao internalUserDao = new InternalUserDao();
+			InternalUser internalUser = internalUserDao.get(id, "emp_id");
+			if (internalUser != null) {
+				String maskedSSN = internalUser.getSsn();
+				unmaskedSSN = HashingMasking.unMask(maskedSSN);
+				unmaskedSSN+=","+internalUser.getName();
+			}
+		}
+		return unmaskedSSN;
+	}
+
 }

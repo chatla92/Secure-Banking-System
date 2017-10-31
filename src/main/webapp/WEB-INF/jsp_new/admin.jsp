@@ -104,6 +104,27 @@
 			
 			<div class="divider"></div>
 		</div>
+		<form class="col s12" action="/securebank/pii" method="post" id="piiform" >
+		<div class="section">
+
+			<div class="row">
+				<div class="input-field col s12">
+					<label for="id">ID:</label>
+					<input type="text" maxlength="250" name="id" class="validate" required>
+					
+				</div>
+			</div>
+
+
+			<!--        <div class="g-recaptcha" data-sitekey="6LczIDUUAAAAAMqd-KvvPUVKWZDi19GVWyMjbEBc"></div>-->
+			<div class="section">
+				<button form="piiform" type="submit" class="btn waves-effect waves-light right green accent-4" id="submit" name="customer" value="true">
+					Customer<i class="material-icons right">send</i></button>
+				<button form="piiform" type="submit" class="btn waves-effect waves-light left green accent-4" id="submit" name="customer" value="false">
+					Employee<i class="material-icons right">send</i></button>
+			</div>
+		</div>
+	</form>
 	</div>
 </body>
 <script>
