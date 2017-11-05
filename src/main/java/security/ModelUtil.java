@@ -1,6 +1,7 @@
 package security;
 
 import java.util.ArrayList;
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,23 +20,23 @@ public class ModelUtil {
 
 	public static Map<String, String> getUserInfoAsMap(ExternalUser user) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("username", user.getUser_name());
-		map.put("address", user.getAddress());
-		map.put("phone", user.getContact_no());
-		map.put("zipcode", user.getZipcode());
-		map.put("email", user.getEmail());
-		map.put("gender", user.getGender());
+		map.put("username", escapeHtml(user.getUser_name()));
+		map.put("address", escapeHtml(user.getAddress()));
+		map.put("phone", escapeHtml(user.getContact_no()));
+		map.put("zipcode", escapeHtml(user.getZipcode()));
+		map.put("email", escapeHtml(user.getEmail()));
+		map.put("gender", escapeHtml(user.getGender()));
 		return map;
 	}
 
 	public static Map<String, String> getEmpInfoAsMap(InternalUser user) {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("username", user.getUser_name());
-		map.put("address", user.getAddress());
-		map.put("phone", user.getContact_no());
-		map.put("zipcode", user.getZipcode());
-		map.put("email", user.getEmail());
-		map.put("gender", user.getGender());
+		map.put("username", escapeHtml(user.getUser_name()));
+		map.put("address", escapeHtml(user.getAddress()));
+		map.put("phone", escapeHtml(user.getContact_no()));
+		map.put("zipcode", escapeHtml(user.getZipcode()));
+		map.put("email", escapeHtml(user.getEmail()));
+		map.put("gender", escapeHtml(user.getGender()));
 		return map;
 	}
 
@@ -108,22 +109,23 @@ public class ModelUtil {
 
 	public static HashMap<String, String> getMapForPendingModify(ModifyUserInfo modify) {
 		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("user_name", modify.getUser_name());
-		map.put("email", modify.getEmail());
-		map.put("address", modify.getAddress());
-		map.put("zipcode", modify.getZipcode());
-		map.put("gender", modify.getGender());
-		map.put("contact_no", modify.getContact_no());
+		map.put("idNo", escapeHtml(""+modify.getId()));
+		map.put("user_name", escapeHtml(modify.getUser_name()));
+		map.put("email", escapeHtml(modify.getEmail()));
+		map.put("address", escapeHtml(modify.getAddress()));
+		map.put("zipcode", escapeHtml(modify.getZipcode()));
+		map.put("gender", escapeHtml(modify.getGender()));
+		map.put("contact_no", escapeHtml(modify.getContact_no()));
 		return map;
 	}
 
 	public static InternalUser updateEmpInfo(InternalUser username, Map<String, String> map) {
-		username.setUser_name(map.get("username"));
-		username.setEmail(map.get("email"));
-		username.setAddress(map.get("address"));
-		username.setZipcode(map.get("zipcode"));
-		username.setGender(map.get("gender"));
-		username.setContact_no(map.get("phone"));
+		username.setUser_name(escapeHtml(map.get("username")));
+		username.setEmail(escapeHtml(map.get("email")));
+		username.setAddress(escapeHtml(map.get("address")));
+		username.setZipcode(escapeHtml(map.get("zipcode")));
+		username.setGender(escapeHtml(map.get("gender")));
+		username.setContact_no(escapeHtml(map.get("phone")));
 		return username;
 	}
 

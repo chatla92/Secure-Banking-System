@@ -19,7 +19,7 @@
         <user-data-constraint>
            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
-</security-constraint>
+	</security-constraint>
 	<error-page>
 		<exception-type>java.lang.Throwable</exception-type>
 		<location>/error</location>

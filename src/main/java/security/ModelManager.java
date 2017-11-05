@@ -451,17 +451,17 @@ public class ModelManager {
 		return list;
 	}
 
-	public static String handleIntModifyApprove(String userName, boolean equals) {
+	public static String handleIntModifyApprove(String idNo, boolean equals) {
 		boolean isSuccessful = false;
 		try {
 			ModifyUserInfoDao modifyDao = new ModifyUserInfoDao();
-			ModifyUserInfo userInfo = modifyDao.get(userName, "user_name");
+			ModifyUserInfo userInfo = modifyDao.get(Integer.parseInt(idNo), "id");
 			isSuccessful = updateExtUserEntry(userInfo);
 			modifyDao.delete(userInfo);
 
 		} catch (Exception e) {
 		}
-		return isSuccessful ? "Modified successfully" : "Balance is not sufficient";
+		return isSuccessful ? "Modified successfully" : "Modification Unseccessful";
 	}
 
 	private static boolean updateExtUserEntry(ModifyUserInfo userInfo) {
