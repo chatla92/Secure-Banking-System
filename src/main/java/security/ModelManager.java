@@ -610,4 +610,14 @@ public class ModelManager {
 		return unmaskedSSN;
 	}
 
+	public static ArrayList<HashMap<String, String>> getInternalUserList() {
+		InternalUserDao internalUserDao = new InternalUserDao();
+		List<InternalUser> internalUser = internalUserDao.findAll();
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+		for(InternalUser user:internalUser) {
+			list.add((HashMap<String, String>) ModelUtil.getEmpInfoAsMapForAdmin(user));
+		}
+		return list;
+	}
+
 }

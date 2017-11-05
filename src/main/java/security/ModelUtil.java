@@ -40,6 +40,15 @@ public class ModelUtil {
 		return map;
 	}
 
+	public static Map<String, String> getEmpInfoAsMapForAdmin (InternalUser user) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("empId", escapeHtml(""+user.getEmp_id()));
+		map.put("username", escapeHtml(user.getUser_name()));
+		map.put("phone", escapeHtml(user.getContact_no()));
+		map.put("email", escapeHtml(user.getEmail()));
+		return map;
+	}
+	
 	public static Map<String, String> getMapForExSessionDetail(ExternalUser user) {
 		Map<String, String> result = null;
 		result = new HashMap<String, String>();

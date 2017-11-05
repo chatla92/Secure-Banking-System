@@ -64,6 +64,23 @@ public class AcessPIIController {
 		return "pii";
 	}
 
+	@RequestMapping(value="/employees" , method = RequestMethod.GET)
+	public String getEmployee(Model model, HttpServletRequest request,RedirectAttributes redAttr) {
 
+		if (request.getSession(false) != null) {
+			try {
+				setUserDetails(request);
+				if (!RoleCheck.isInternal(role)) {
+					redAttr.addFlashAttribute("home", "Unauthorized access, Action will be reported");
+					return "redirect:/home";
+				}
+			} catch (DataException e) {
+				return "redirect:/login";
+			}
+			model.addAttribute("emplist", ModelManager.getInternalUserList());
+			return "emp_list";
+		}
+		return "redirect:/login";
+	}
 
 }
