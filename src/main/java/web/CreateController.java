@@ -82,8 +82,8 @@ public class CreateController {
 				try {
 					ModelManager.createNewUser(map);
 				} catch (DataException e) {
-					redAttr.addFlashAttribute("flash", e.getMessageDetail());
-					return "redirect:/create";
+					redAttr.addFlashAttribute("home", e.getMessageDetail());
+					return "redirect:/home";
 				}
 			}else if(role.equalsIgnoreCase("IA")){
 				Map<String, String> map = new HashMap<String, String>();

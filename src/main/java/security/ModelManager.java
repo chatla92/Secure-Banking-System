@@ -552,4 +552,62 @@ public class ModelManager {
 		}
 	}
 
+	public static boolean deleteExtUser(String userId) {
+		try {
+			if (userId != null && !userId.equals("")) {
+				ExternalUserDao extDao = new ExternalUserDao();
+				ExternalUser extUser = extDao.get(Integer.valueOf(userId), "user_id");
+				if (extUser != null) {
+					extDao.delete(extUser);
+					return true;
+				}
+				return false;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return false;
+
+	}
+
+	public static boolean deleteIntUser(String userId) {
+		try {
+			if (userId != null && !userId.equals("")) {
+				InternalUserDao intDao = new InternalUserDao();
+				InternalUser intUser = intDao.get(Integer.valueOf(userId), "emp_id");
+				if (intUser != null) {
+					intDao.delete(intUser);
+					return true;
+				}
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		return false;
+	}
+
+	public static String getPII(int id, boolean customer) {
+		String unmaskedSSN = "";
+		if (customer) {
+			ExternalUserDao externalUserDao = new ExternalUserDao();
+			ExternalUser externalUser = externalUserDao.get(id, "user_id");
+
+			if (externalUser != null) {
+				String maskedSSN = externalUser.getSsn();
+				unmaskedSSN = HashingMasking.unMask(maskedSSN);
+				unmaskedSSN+=","+externalUser.getName();
+			}
+
+		} else if(!customer) {
+			InternalUserDao internalUserDao = new InternalUserDao();
+			InternalUser internalUser = internalUserDao.get(id, "emp_id");
+			if (internalUser != null) {
+				String maskedSSN = internalUser.getSsn();
+				unmaskedSSN = HashingMasking.unMask(maskedSSN);
+				unmaskedSSN+=","+internalUser.getName();
+			}
+		}
+		return unmaskedSSN;
+	}
+
 }
